@@ -187,10 +187,10 @@ bool Scena_Accesso_Amministratore(PROGRAMMA* programma){
 
 void Scena_Home_Amministratore(PROGRAMMA* programma) {
 
-	int scelta ;
+	int scelta = 0 ;
 	PROGRAMMA temp = *programma;
 
-	while (scelta != 0) {
+	do{
 		if (temp.admin.account_sbloccato == false) {
 			printf("Il tuo account ancora non è stato accetato, (attendi che un tuo superiore lo faccia)\n");
 			scelta = 0;
@@ -227,7 +227,7 @@ void Scena_Home_Amministratore(PROGRAMMA* programma) {
 			}
 		}
 		
-	}
+	}while (scelta != 0);
 }
 
 void Scena_Gestione_Catalogo(void){
@@ -240,10 +240,16 @@ void Scena_Gestione_Catalogo(void){
 	{
 		case Aggiungi_volo:
 			
-			temp = Crea_Volo();
-			Salva_volo(temp);
+			//temp = Crea_Volo();
+			//Salva_volo(temp);
 			
 			
+			Associa_Personale_volo(temp);
+			
+			for(int i = 0; i < NUMERO_PERSONALE; i++)
+			{
+				printf("%s, %s, %s\n",temp.personale[i].nome,temp.personale[i].cognome, temp.personale[i].Id);
+			}
 		break;
 
 		default:

@@ -37,7 +37,7 @@ UTENTE Iscrizione_Utente(void){
         printf("Inserisci il cognome:\n");
         scanf(" %s", temp.cognome);
 
-        printf("Inserisci la password (Lunghezza max 19, almeno una lettera maiuscola e un carattere speciale = (! "" # $ /'"%" & , ( ) * + ' - ))\n");
+        printf("Inserisci la password (Lunghezza max 19, almeno una lettera maiuscola e un carattere speciale = (! # $ / & , ( ) * + ' - ))\n");
         fflush(stdin);
 
         do {
@@ -552,6 +552,8 @@ VOLO Crea_Volo(void) {  //funzione per creare il volo
     temp.Stato_volo = false;
     strcpy(temp.messaggio, "nessuno");
 
+    //Manca assegnazione personale di volo
+
     return temp;
 }
 
@@ -577,7 +579,7 @@ bool Verifica_Data_Bisestile(int giorno, int mese, int anno) {
         return (giorno >= 1 && giorno <= giorni_mese[mese - 1]);  // Controllo se il giorno è valido per quel mese
     }
 
-void Associa_Personale_volo(VOLO temp) {
+void Associa_Personale_volo(VOLO temp) { //DA SISTEMARE
     /*I controlli che fa questa funzione e vedere se il personale che si vuole inserire e disponibile oppure e gia
      *stato associato. Se il personale scelto è libero allora viene associato al volo, altrimenti richiede di inserire un
      *nuovo personale
@@ -700,6 +702,14 @@ void Associa_Personale_volo(VOLO temp) {
         }
     }
 
+    /* PROBLEMA DA RISOLVERE:
+        Dice che tutto il personale di volo è occupato....; poi ovviamente sta un altro problema, ovvero che ogni qual volta che un personale di volo
+        viene scelto, bisogna aggiornare lo stato del personale e riscrivere il file. Ma qui sorge un grande dilemma, come posso liberare un personale?
+        Quando un aereo è arrivato, gli stati di tutto il personale di bordo si aggiorna in true ? e quando un aereo atterra come lo posso segnalare?
+
+        Ci penso un po su ...
+    
+    */
 
 }
 
