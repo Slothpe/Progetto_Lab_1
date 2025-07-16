@@ -9,7 +9,7 @@
 
 int Menu_Principale(void) {
 
-    int scelta;
+    int scelta = 20;
 
     printf("--------MENU PRINCIPALE----------\n");
     printf("Premi 0: Per Pannello Utente\n");
@@ -17,6 +17,7 @@ int Menu_Principale(void) {
     printf("Premi 2: per chiudere il programma\n");
 
     scanf("%d",&scelta);
+	printf("Scena dopo input: %d\n",scelta);
 
     return scelta;
 }

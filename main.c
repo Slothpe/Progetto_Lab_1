@@ -2,7 +2,7 @@
 #include "string.h"
 #include <stdlib.h>
 #include "Scena_menager.h"
-#define SCENA_DEFAULT 100 // Valore fittizzio per settare la scena. se metto 0 va in confilitto per il controllo degli input
+#define SCENA_DEFAULT 9 // Valore fittizzio per settare la scena. se metto 0 va in confilitto per il controllo degli input
 
 /*
  *ACCOUNT DI PROVA:
@@ -44,6 +44,7 @@ int main(void)
 
 		
         programma.scena = Menu_Principale();
+        
 
         switch (programma.scena)
             {
@@ -76,7 +77,6 @@ int main(void)
 
             }
 
-            system("clear");
         }
 
 	printf("Utente: %s %s\n",programma.utente.nome, programma.utente.cognome);
