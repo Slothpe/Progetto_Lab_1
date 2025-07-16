@@ -187,7 +187,7 @@ bool Scena_Accesso_Amministratore(PROGRAMMA* programma){
 
 void Scena_Home_Amministratore(PROGRAMMA* programma) {
 
-	int scelta = 20; // valore fittizzio
+	int scelta ;
 	PROGRAMMA temp = *programma;
 
 	while (scelta != 0) {
@@ -232,7 +232,7 @@ void Scena_Home_Amministratore(PROGRAMMA* programma) {
 
 void Scena_Gestione_Catalogo(void){
 
-	int scelta = 0;
+	int scelta;
 	VOLO temp;
 	Menu_Gestione_Catalogo();
 
@@ -247,7 +247,7 @@ void Scena_Gestione_Catalogo(void){
 		break;
 
 		default:
-		
+			printf("Errore\n");
 		break;
 	}
 	

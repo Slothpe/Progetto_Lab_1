@@ -9,7 +9,26 @@
 #include <time.h>
 #include <stdlib.h>
 
-UTENTE Iscrizione_Utente(void){   //funzione per l'iscrizione degli utenti
+#define DEFAULT_SCELTA 9;
+
+UTENTE Iscrizione_Utente(void){  
+
+    /*
+        Questa funzione gestisce l'iscrizione di un utente
+        Affinchè un utente sia registrato è necessario inseire
+        le seguneti informazioni:
+
+        1) Nome
+        2) Cognome
+        3) Password con simboli speciali
+        4) Numero di documento (Passaporto)
+        5) Scelta sul pasto preferito (tipologia)
+        6) Scelta sul numero di posto preferito
+        7) Tipologia di classe preferita (prima ecc...)
+    
+        Durante l'acquisizione di queste informazioni, vengono effettuati dei controlli
+        affinchè le info siano corrette e sensate.
+    */
         UTENTE temp;
     
         printf("Inserisci il nome:\n");
@@ -18,10 +37,11 @@ UTENTE Iscrizione_Utente(void){   //funzione per l'iscrizione degli utenti
         printf("Inserisci il cognome:\n");
         scanf(" %s", temp.cognome);
 
-        printf("Inserisci la password (Lunghezza max 19, almeno una lettera maiuscola e un carattere speciale)\n");
+        printf("Inserisci la password (Lunghezza max 19, almeno una lettera maiuscola e un carattere speciale = (! "" # $ /'"%" & , ( ) * + ' - ))\n");
         fflush(stdin);
 
         do {
+            
             scanf("%s",temp.password);
 
         }while(Controlla_Password(temp.password) == false);
@@ -43,16 +63,25 @@ UTENTE Iscrizione_Utente(void){   //funzione per l'iscrizione degli utenti
     return temp;
     }
 
-void Scelta_Pasto(char pasto[]){   //funzione per la scelta dei pasti
+void Scelta_Pasto(char pasto[]){   
    
-    int scelta = 0;
-    bool scelta_corretta = false; //e falso finche l'utente non fa una scelta corretta
+    /*
+        Per la realizzazione del account associato ad un utente, è obbligatorio
+        scegliere una tipologia di pasto tra quelle proposte.
+
+        Anche qui è presenta la constate globale DEFAULT_SCELTA per far fornte al inserimento di unn carattere
+        al posto di un numero come scelta. Il numero che ho inserito è abritatrio, ed ho inserito un valore in modo
+        tale che non vada in conflitto con le opzioni dei menu (quanto meno per il momento .... :)  )
+    
+    */
+    int scelta = DEFAULT_SCELTA;
+    bool scelta_corretta = false; //e falso finchè l'utente non fa una scelta corretta
     char* opzioni_pasto [5] = {"Vegetariano","Vegano","Lattosio","Glutine","niente"}; //scelte effetuabili dal utente
 
     printf("Inserisci una preferenza sul cibo:\n");
     while (scelta_corretta == false)
     {
-
+        
         printf("Inserisci 0: Vegetariano\n");
         printf("Inserisci 1: Vegano\n");
         printf("Inserisci 2: Lattosio\n");
@@ -74,6 +103,13 @@ void Scelta_Pasto(char pasto[]){   //funzione per la scelta dei pasti
     }
 
 int Scelta_Posto_Preferito(void)  //funzione per scegliere il posto preferito
+
+/*
+    Anche qui come accennato al inzio per la realizzazione del profilo associato ad un untente e obbligatorio
+    scegliere un numero di posto preferito. Non sono stati inseriti grandi controlli, l'importante che il numero
+    scelta dal utente sia compreso tra 0 e MAX_PASSEGGERI -> Numero massimo di passeggeri che un aereo può ospitare
+
+*/
 {
     int posto_inserito = 0;
 
@@ -87,7 +123,16 @@ int Scelta_Posto_Preferito(void)  //funzione per scegliere il posto preferito
 
 }
 
-bool Controlla_Password(char password[]) {  //funzione per il controllo della password, se rispecchia i vincoli
+bool Controlla_Password(char password[]) {  
+
+    /*
+        Per la realizzazione del account e necessario inserire una password, la password deve mantenere e
+        rispettare dei vincoli particolari, non abbiamo un vincolo sulla lunghezza minima ma solo sulla
+        massima (Mi rendo conto che non è il massimo della sicurezza :[  ). Esistono però dei vincoli
+        sui simboli che compongono la password, ovvero una lettera maisucola, una minuscola e carattere
+        speciale (! " # $ % & , ( ) * + ' - )
+
+    */
 
     bool stato_carattere = false;
     bool stato_speciale = false;
@@ -109,7 +154,7 @@ bool Controlla_Password(char password[]) {  //funzione per il controllo della pa
             }
         }
         //Controllo se ci sono caratteri speciali
-        for (int j = '!'; j < '/'; j++) {
+        for (int j = '!'; j < '.'; j++) {
             if (password[i] == j) {
                 stato_speciale = true;
             }
@@ -121,7 +166,7 @@ bool Controlla_Password(char password[]) {  //funzione per il controllo della pa
     return stato_carattere && stato_speciale;
 }
 
-bool Controlla_Documento(char numero_passaporto[])  //funzione per i criteri del passaporto
+bool Controlla_Documento(char numero_passaporto[]) 
 {
     bool stato_1 = false;
     bool stato_2 = false;
