@@ -579,11 +579,24 @@ bool Verifica_Data_Bisestile(int giorno, int mese, int anno) {
         return (giorno >= 1 && giorno <= giorni_mese[mese - 1]);  // Controllo se il giorno è valido per quel mese
     }
 
-void Associa_Personale_volo(VOLO temp) { //DA SISTEMARE
-    /*I controlli che fa questa funzione e vedere se il personale che si vuole inserire e disponibile oppure e gia
-     *stato associato. Se il personale scelto è libero allora viene associato al volo, altrimenti richiede di inserire un
-     *nuovo personale
-     *
+void Associa_Personale_volo(VOLO temp) { 
+    /*  Lo scopo di questa funzione e quello di associare ad un volo un certo numero di operatori tra cui:
+            N°1 Pilota
+            N°1 Co-Pilota
+            N°3 Hostess
+
+            La struttura VOLO ha un attributo che si chiama personale_volo che non è altro che un array
+            che contiene al suo interno il personale di volo associato
+
+            Per l' inserimento del personale di volo al volo, viene stampato volta per volta la lista del
+            personale disponbile (a prescindere se è gia stato associato o meno). L'inserimento avviene
+            tramite ID. Nella verifca della correttezza del id (Essendo un id univoco bastava già la verifica
+             che sia corretto affinchè l'inserimento avvennisse) è stato fatto un doppio controllo, ovvero
+            sul ruolo associato alla persone al id (Questo per evitare d'inserire al interno del volo 
+            del personale inutile per esempio 2 piloti, un copilota e 2 hostess)
+
+            Alla fine del inserimento del personale di volo, il file che contiene i dati associati al personale,
+            viene riscirtto aggiornando i dati (per esempio stato del perosnale da occupato a libero).
      */
 
     int associato = 0;
@@ -595,7 +608,7 @@ void Associa_Personale_volo(VOLO temp) { //DA SISTEMARE
 
     FILE* ptr = fopen(FILE_NAME_PERSONALE,"rb");
 
-    // legge gli elementi di un file e li salva in un array
+    
 
     while(fread(&personale_volo[Indice],sizeof(PERSONALE_VOLO),1,ptr) != 0) {
         Indice++;
@@ -609,8 +622,9 @@ void Associa_Personale_volo(VOLO temp) { //DA SISTEMARE
                 if(personale_volo[i].occupato == false) {
                     printf("Stato: Libero\n");
                 }else {
-                    printf("Stato: Occupato");
-                }            }
+                    printf("Stato: Occupato\n");
+                }            
+            }
         }
 
 
@@ -621,10 +635,10 @@ void Associa_Personale_volo(VOLO temp) { //DA SISTEMARE
 
         for (int i = 0; i < elementi; i++) {
             if (strcmp(personale_volo[i].ruolo,"Pilota") == 0 && strcmp(personale_volo[i].Id,ID_ingresso) == 0) {
-                if (personale_volo[i].occupato == false) {
+                if (personale_volo[i].occupato == true) {
                     printf("Il pilota è occupato in un altro volo\n");
                 }else {
-                    printf("Pilota %s %s Inserito",personale_volo[i].nome, personale_volo[i].cognome);
+                    printf("Pilota %s %s Inserito\n",personale_volo[i].nome, personale_volo[i].cognome);
                     personale_volo[i].occupato = true;
                     temp.personale[associato] = personale_volo[i];
                     associato++;
@@ -654,10 +668,10 @@ void Associa_Personale_volo(VOLO temp) { //DA SISTEMARE
 
         for (int i = 0; i < elementi; i++) {
             if (strcmp(personale_volo[i].ruolo,"Co-Pilota") == 0 && strcmp(personale_volo[i].Id,ID_ingresso) == 0) {
-                if (personale_volo[i].occupato == false) {
+                if (personale_volo[i].occupato == true) {
                     printf("Il Co-Pilota è occupato in un altro volo\n");
                 }else {
-                    printf("Pilota %s %s Inserito",personale_volo[i].nome, personale_volo[i].cognome);
+                    printf("Pilota %s %s Inserito\n",personale_volo[i].nome, personale_volo[i].cognome);
                     personale_volo[i].occupato = true;
                     temp.personale[associato] = personale_volo[i];
                     associato++;
@@ -681,6 +695,8 @@ void Associa_Personale_volo(VOLO temp) { //DA SISTEMARE
     }
 
     for (int i = 0; i < 3; i++) {
+
+        stato = false;
         while (stato == false) {
             printf("Inserisci l'Id di un Hostess da associare al volo: ");
             scanf("%s",ID_ingresso);
@@ -688,28 +704,29 @@ void Associa_Personale_volo(VOLO temp) { //DA SISTEMARE
 
             for (int j = 0; j < elementi; j++) {
                 if (strcmp(personale_volo[j].ruolo,"Hostess") == 0 && strcmp(personale_volo[j].Id,ID_ingresso) == 0) {
-                    if (personale_volo[j].occupato == false) {
+                    if (personale_volo[j].occupato == true) {
                         printf("L'Hosstess è occupato in un altro volo\n");
                     }else {
-                        printf("Pilota %s %s Inserito",personale_volo[j].nome, personale_volo[j].cognome);
+                        printf("%s %s Inserito\n",personale_volo[j].nome, personale_volo[j].cognome);
                         personale_volo[j].occupato = true;
                         temp.personale[associato] = personale_volo[j];
                         associato++;
                         stato = true;
                     }
+                }else{
+                        printf("Id errato\n");
                 }
             }
         }
     }
 
-    /* PROBLEMA DA RISOLVERE:
-        Dice che tutto il personale di volo è occupato....; poi ovviamente sta un altro problema, ovvero che ogni qual volta che un personale di volo
-        viene scelto, bisogna aggiornare lo stato del personale e riscrivere il file. Ma qui sorge un grande dilemma, come posso liberare un personale?
-        Quando un aereo è arrivato, gli stati di tutto il personale di bordo si aggiorna in true ? e quando un aereo atterra come lo posso segnalare?
+    Aggiorna_File(&personale_volo[0],&personale_volo[elementi-1],FILE_NAME_PERSONALE);
 
-        Ci penso un po su ...
+    for (int i = 0; i < elementi; i++)
+    {
+        printf("%s %s %s %d \n",personale_volo[i].nome,personale_volo[i].cognome,personale_volo[i].Id,personale_volo[i].occupato);
+    }
     
-    */
 
 }
 
@@ -723,7 +740,6 @@ void Salva_volo(VOLO volo){
 	fclose(ptr_file);
 		
 }
-
 
 
 /*
@@ -834,3 +850,62 @@ void Visualizza_Segnalazioni(UTENTE* utente) {
     printf("-----------------------------------\n");
 }
 */
+
+void Aggiorna_File(void* min, void* max, char* nome_file)
+{
+
+/* La funzione aggiorna file, non fa altro che riscrivere un file, dando come
+    parametri due indirizzi di memoria e il nome del file da riscrivere.
+
+    Questa funzione nasce dal bisogno principale di aggiornare i file una volta
+    che i dati sono stati modificati. Un esempio puo essere quello dei voli,
+    magari un volo viene eliminato, oppure è pieno e quindi bisogna
+    aggiornare il file dei voli affinche le informazioni associate al volo
+    siano aggiornate. Dato che questo è un caso che può avvenire 
+    frequentemnte e con file e tipi di dato diverss, ho creato questa
+    funzione cercando di generalizzarla il più possibile.
+
+    Come parametri richiede due puntatori void e un puntatore char.
+
+    I due puntatori sono void perchè la funzione dev'essere generalizzata, e
+    deve funzionare con qualsiasi tipo di dato. un puntatore di tipo void ci 
+    consente di mantenere un qualsiasi tipo d'indirizzo, che fa riferimento alla
+    memoria, svincolandoci dal tipo.
+
+    il puntatore a char invece non e altro che il nome del file che vogliamo
+    riscrivere.
+
+    Ho deciso di utlizzare gli indirizzi perchè, come approccio di lettura ai file
+    e alla modifica ho deciso di utilizare gli array. Quindi sfrutto l'aritmetica
+    dei puntatori per accedere al array e riscivere il file.
+
+    Il nome del file da riscrivere è FONDAMENTALE, perchè attraverso quello posso
+    risalire al tipo di dato su cui sto lavorando... come ? facendo il casting
+    del punatore di tipo void al tipo di dato che è contenuto nel file.
+
+    ANCORA DA IMPLEMENTARE IL FUNZIONAMENTO PER TUTTI I FILE
+
+*/
+
+
+    if(strcmp(nome_file,FILE_NAME_PERSONALE) == 0)
+    {
+        PERSONALE_VOLO* ptr_min = (PERSONALE_VOLO*)min;
+        PERSONALE_VOLO* ptr_max = (PERSONALE_VOLO*)max;
+        FILE* ptr_file = fopen(FILE_NAME_PERSONALE,"wb");
+
+        for ( ;ptr_min <= ptr_max; ptr_min++)
+        {
+            fwrite(ptr_min,sizeof(PERSONALE_VOLO),1,ptr_file);
+            
+        }
+        
+
+        fclose(ptr_file);
+    }
+        
+
+
+
+    
+}

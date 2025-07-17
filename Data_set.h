@@ -127,5 +127,5 @@ bool Check_In(UTENTE* utente, VOLO* volo);
 bool Invia_Segnalazione(UTENTE* utente, char* messaggio);
 void Visualizza_Segnalazioni(UTENTE* utente);
 void Salva_volo(VOLO);
-
+void Aggiorna_File(void*, void*, char*);
 

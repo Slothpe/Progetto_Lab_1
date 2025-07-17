@@ -37,6 +37,9 @@ int main(void)
     programma.stato_programma = true;
     programma.scena = SCENA_DEFAULT ;
 
+    VOLO temp;
+    Associa_Personale_volo(temp);
+    /*
     printAirPlane();
 
     while (programma.stato_programma == true)
@@ -81,7 +84,7 @@ int main(void)
 
 	printf("Utente: %s %s\n",programma.utente.nome, programma.utente.cognome);
     printf("Amministratore: %s %s ID: %s\n",programma.admin.nome, programma.admin.cognome, programma.admin.Id);
-
+*/
 
     return 0;
 }
