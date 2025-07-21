@@ -552,7 +552,7 @@ VOLO Crea_Volo(void) {  //funzione per creare il volo
     temp.Stato_volo = false;
     strcpy(temp.messaggio, "nessuno");
 
-    //Manca assegnazione personale di volo
+    Associa_Personale_volo(temp);
 
     return temp;
 }
@@ -777,6 +777,7 @@ VOLO Trova_Volo(VOLO voli[], int num_voli, char* origine, char* destinazione, in
     return (VOLO) {0};
 }
 */
+
 /*
 bool Check_In(UTENTE* utente, VOLO* volo) {
     // Controlla se il volo è attivo
@@ -883,8 +884,6 @@ void Aggiorna_File(void* min, void* max, char* nome_file)
     risalire al tipo di dato su cui sto lavorando... come ? facendo il casting
     del punatore di tipo void al tipo di dato che è contenuto nel file.
 
-    ANCORA DA IMPLEMENTARE IL FUNZIONAMENTO PER TUTTI I FILE
-
 */
 
 
@@ -905,6 +904,38 @@ void Aggiorna_File(void* min, void* max, char* nome_file)
     }
         
 
+    if(strcmp(nome_file,FILE_NAME_FLY) == 0)
+    {
+        VOLO* ptr_min = (VOLO*)min;
+        VOLO* ptr_max = (VOLO*)max;
+        FILE* ptr_file = fopen(FILE_NAME_PERSONALE,"wb");
+
+        for ( ;ptr_min <= ptr_max; ptr_min++)
+        {
+            fwrite(ptr_min,sizeof(VOLO),1,ptr_file);
+            
+        }
+        
+
+        fclose(ptr_file);
+    }
+        
+    if(strcmp(nome_file,FILE_NAME_USER) == 0)
+    {
+        UTENTE* ptr_min = (UTENTE*)min;
+        UTENTE* ptr_max = (UTENTE*)max;
+        FILE* ptr_file = fopen(FILE_NAME_PERSONALE,"wb");
+
+        for (;ptr_min <= ptr_max; ptr_min++)
+        {
+            fwrite(ptr_min,sizeof(UTENTE),1,ptr_file);
+            
+        }
+        
+
+        fclose(ptr_file);
+    }
+        
 
 
     
