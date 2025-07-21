@@ -46,7 +46,7 @@ int main(void)
 
     rewind(ptr_file);
     contatore ++ ;
-    PERSONALE_VOLO array[contatore];
+    PERSONALE_VOLO array[contatore+1];
 
     int index = 0;
     while(fread(&temp,sizeof(PERSONALE_VOLO),1,ptr_file)!= 0)

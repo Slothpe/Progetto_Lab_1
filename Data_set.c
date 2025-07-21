@@ -863,7 +863,7 @@ void Aggiorna_File(void* min, void* max, char* nome_file)
     magari un volo viene eliminato, oppure è pieno e quindi bisogna
     aggiornare il file dei voli affinche le informazioni associate al volo
     siano aggiornate. Dato che questo è un caso che può avvenire 
-    frequentemnte e con file e tipi di dato diverss, ho creato questa
+    frequentemnte e con file e tipi di dato diversi, ho creato questa
     funzione cercando di generalizzarla il più possibile.
 
     Come parametri richiede due puntatori void e un puntatore char.

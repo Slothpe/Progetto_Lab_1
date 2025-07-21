@@ -21,7 +21,10 @@ typedef struct {   //struttura per i dati dell'amministratore
 }AMMINISTRATORE;
 
 
-
+/*
+	Questo mini programma serve per vedere tutti gli account
+	amministratori che sonon stati salvati sul file
+*/
 
 int main(void){
 
