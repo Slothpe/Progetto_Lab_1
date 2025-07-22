@@ -2,6 +2,7 @@
 // Created by Perrulli Antonio on 14/04/25.
 #include <stdbool.h>
 #include<stdio.h>
+#define SCENA_DEFAULT 9 // Valore fittizzio per settare la scena. se metto 0 va in confilitto per il controllo degli input
 #define FILE_NAME_PERSONALE "Data_Personale_Volo.bin"
 #define FILE_NAME_USER "Data_User.bin"
 #define FILE_NAME_ADMIN "Data_Admin.bin"
@@ -13,7 +14,7 @@
 #define MAX_PREFERENZE 12
 #define MAX_STRINGHE 20
 #define MAX_ID 10
-#define NUMERO_PERSONALE 5
+#define NUMERO_PERSONALE 4
 
 
 typedef struct {
@@ -121,11 +122,11 @@ void Gestisci_voli(VOLO [], int);
 void Generazione_ID_Volo(char[]);
 bool Bisestile(int anno);
 bool Verifica_Data_Bisestile(int giorno, int mese, int anno);
-void Associa_Personale_volo(VOLO);
+VOLO Associa_Personale_volo(VOLO);
 VOLO Trova_Volo(VOLO voli[], int num_voli, char* origine, char* destinazione, int giorno, int mese, int anno, int ora, int minuti, int ID_volo);
 bool Check_In(UTENTE* utente, VOLO* volo);
 bool Invia_Segnalazione(UTENTE* utente, char* messaggio);
 void Visualizza_Segnalazioni(UTENTE* utente);
 void Salva_volo(VOLO);
 void Aggiorna_File(void*, void*, char*);
-
+void Stampa_Voli(VOLO []);

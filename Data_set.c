@@ -552,7 +552,7 @@ VOLO Crea_Volo(void) {  //funzione per creare il volo
     temp.Stato_volo = false;
     strcpy(temp.messaggio, "nessuno");
 
-    Associa_Personale_volo(temp);
+    temp = Associa_Personale_volo(temp);
 
     return temp;
 }
@@ -579,11 +579,11 @@ bool Verifica_Data_Bisestile(int giorno, int mese, int anno) {
         return (giorno >= 1 && giorno <= giorni_mese[mese - 1]);  // Controllo se il giorno è valido per quel mese
     }
 
-void Associa_Personale_volo(VOLO temp) { 
+VOLO Associa_Personale_volo(VOLO temp) { 
     /*  Lo scopo di questa funzione e quello di associare ad un volo un certo numero di operatori tra cui:
             N°1 Pilota
             N°1 Co-Pilota
-            N°3 Hostess
+            N°2 Hostess
 
             La struttura VOLO ha un attributo che si chiama personale_volo che non è altro che un array
             che contiene al suo interno il personale di volo associato
@@ -599,10 +599,11 @@ void Associa_Personale_volo(VOLO temp) {
             viene riscirtto aggiornando i dati (per esempio stato del perosnale da occupato a libero).
      */
 
-    int associato = 0;
-    int Indice = 0;
+
+    int associato = 0; // Numero attuale del personale associato
+    int Indice = 0; //Indice usato per riempire l'array
     char ID_ingresso[MAX_ID];
-    bool stato = false;
+    bool stato = false; //Stato che identifica la corretta associazione del personale
     int elementi = Conta_Elementi(FILE_NAME_PERSONALE);
     PERSONALE_VOLO personale_volo[elementi];
 
@@ -631,7 +632,7 @@ void Associa_Personale_volo(VOLO temp) {
     while (stato == false) {
         printf("Inserisci l'Id di un pilota da associare al volo: ");
         scanf("%s",ID_ingresso);
-        puts("\n");
+        puts(" ");
 
         for (int i = 0; i < elementi; i++) {
             if (strcmp(personale_volo[i].ruolo,"Pilota") == 0 && strcmp(personale_volo[i].Id,ID_ingresso) == 0) {
@@ -694,7 +695,7 @@ void Associa_Personale_volo(VOLO temp) {
             }            }
     }
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 2; i++) {
 
         stato = false;
         while (stato == false) {
@@ -713,8 +714,6 @@ void Associa_Personale_volo(VOLO temp) {
                         associato++;
                         stato = true;
                     }
-                }else{
-                        printf("Id errato\n");
                 }
             }
         }
@@ -722,12 +721,12 @@ void Associa_Personale_volo(VOLO temp) {
 
     Aggiorna_File(&personale_volo[0],&personale_volo[elementi-1],FILE_NAME_PERSONALE);
 
-    for (int i = 0; i < elementi; i++)
+    for(int i = 0; i < NUMERO_PERSONALE; i++)
     {
-        printf("%s %s %s %d \n",personale_volo[i].nome,personale_volo[i].cognome,personale_volo[i].Id,personale_volo[i].occupato);
+        printf("%s %s %s %s %d\n",temp.personale[i].nome,temp.personale[i].cognome,temp.personale[i].Id,temp.personale[i].ruolo,temp.personale[i].occupato);
     }
-    
 
+    return temp;
 }
 
 void Salva_volo(VOLO volo){
@@ -935,8 +934,35 @@ void Aggiorna_File(void* min, void* max, char* nome_file)
 
         fclose(ptr_file);
     }
-        
-
-
     
+}
+void Stampa_Voli(VOLO voli[])
+{
+
+    int numero_voli = Conta_Elementi(FILE_NAME_FLY);
+
+    for (int  i = 0; i < numero_voli; i++)
+    {   
+        printf("Partenza: %s\n",voli[i].partenza_origine);
+        printf("Destinazione: %s\n",voli[i].destinazione);
+        printf("Data: %d.%d.%d\n",voli[i].data.giorno,voli[i].data.mese,voli[i].data.anno);
+        printf("Ora: %d:%d\n",voli[i].data.ora,voli[i].data.minuti);
+        printf("Id Aereomobile: %s\n",voli[i].Id_Aereomobile);
+        printf("Id volo: %s\n",voli[i].Id_Volo);
+        printf("Messaggio: %s\n",voli[i].messaggio);
+        printf("Posti business: %d\n",voli[i].posti_business);
+        //printf("Posti disponbili: %d\n",voli[i].posti_disponibili);
+        printf("Posti economy: %d\n",voli[i].posti_economy);
+        printf("Posti prima classe: %d\n",voli[i].posti_prima_classe);
+        printf("Stato volo: %d\n",voli[i].Stato_volo);
+        
+        for(int j = 0; j < NUMERO_PERSONALE; j++)
+        {
+            printf("%s %s %s %s %d\n",voli[i].personale[j].nome,voli[i].personale[j].cognome,voli[i].personale[j].Id,voli[i].personale[j].ruolo,voli[i].personale[j].occupato);
+        }
+
+    }
+    
+
+
 }

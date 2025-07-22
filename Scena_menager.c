@@ -232,7 +232,7 @@ void Scena_Home_Amministratore(PROGRAMMA* programma) {
 
 void Scena_Gestione_Catalogo(void){
 
-	int scelta;
+	int scelta = SCENA_DEFAULT;
 	VOLO temp;
 	Menu_Gestione_Catalogo();
 
@@ -240,20 +240,19 @@ void Scena_Gestione_Catalogo(void){
 	{
 		case Aggiungi_volo:
 			
-			//temp = Crea_Volo();
-			//Salva_volo(temp);
-			
-			
-			Associa_Personale_volo(temp);
-			
-			for(int i = 0; i < NUMERO_PERSONALE; i++)
-			{
-				printf("%s, %s, %s\n",temp.personale[i].nome,temp.personale[i].cognome, temp.personale[i].Id);
-			}
+			temp = Crea_Volo();
+			Salva_volo(temp);
+
+		break;
+
+		case Modifica_volo:
+
+		
+
 		break;
 
 		default:
-			printf("Errore\n");
+			printf("%d\n",scelta);
 		break;
 	}
 	

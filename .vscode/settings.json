@@ -3,6 +3,7 @@
     "files.associations": {
         "scena_menager.h": "c",
         "info_programma.h": "c",
-        "data_set.h": "c"
+        "data_set.h": "c",
+        "stdlib.h": "c"
     }
 }

@@ -2,7 +2,6 @@
 #include "string.h"
 #include <stdlib.h>
 #include "Scena_menager.h"
-#define SCENA_DEFAULT 9 // Valore fittizzio per settare la scena. se metto 0 va in confilitto per il controllo degli input
 
 /*
  *ACCOUNT DI PROVA:
@@ -35,17 +34,8 @@ int main(void)
 
     PROGRAMMA programma;
     programma.stato_programma = true;
-    programma.scena = SCENA_DEFAULT ;
-    VOLO temp;
+    programma.scena = SCENA_DEFAULT;
 
-    for(int i = 0; i < 2; i++)
-    {
-        temp = Crea_Volo();
-        Salva_volo(temp);
-    }
-
-    
-/*
     printAirPlane();
 
     while (programma.stato_programma == true)
@@ -88,6 +78,6 @@ int main(void)
 
         }
 
-*/
+
     return 0;
 }
