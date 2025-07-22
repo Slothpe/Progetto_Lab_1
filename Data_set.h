@@ -2,7 +2,7 @@
 // Created by Perrulli Antonio on 14/04/25.
 #include <stdbool.h>
 #include<stdio.h>
-#define SCENA_DEFAULT 9 // Valore fittizzio per settare la scena. se metto 0 va in confilitto per il controllo degli input
+#define SCENA_DEFAULT 20 // Valore fittizzio per settare la scena. se metto 0 va in confilitto per il controllo degli input
 #define FILE_NAME_PERSONALE "Data_Personale_Volo.bin"
 #define FILE_NAME_USER "Data_User.bin"
 #define FILE_NAME_ADMIN "Data_Admin.bin"
@@ -130,3 +130,4 @@ void Visualizza_Segnalazioni(UTENTE* utente);
 void Salva_volo(VOLO);
 void Aggiorna_File(void*, void*, char*);
 void Stampa_Voli(VOLO []);
+void Cambia_Volo(char[MAX_ID], VOLO [], int);

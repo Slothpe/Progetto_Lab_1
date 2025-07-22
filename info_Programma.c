@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "info_Programma.h"
-#define SCENA_DEFAULT 9 
+#define SCENA_DEFAULT 20 
 /*
 	La constante SCENA_DEFAULT viene usata per elimnare il bug del loop causato dal inserimento 
 	di un carattere (come input da tastiera) nella variabile scelta. Questo perche lo scanf già

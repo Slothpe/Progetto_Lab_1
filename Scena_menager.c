@@ -229,16 +229,36 @@ void Scena_Home_Amministratore(PROGRAMMA* programma) {
 		
 	}while (scelta != 0);
 }
-
+//11:55 ti ha scritto serena
+//risposta alle 12:07 
+//11:57
 void Scena_Gestione_Catalogo(void){
 
-	int scelta = SCENA_DEFAULT;
+	int Numero_voli = Conta_Elementi(FILE_NAME_FLY);
+	VOLO Voli_Salvati[Numero_voli];
+	FILE *ptr_file = fopen(FILE_NAME_FLY,"rb");
+	int indice = 0;
 	VOLO temp;
-	Menu_Gestione_Catalogo();
+
+	//devo salvare i voli nel array voli_salvati
+	while (fread(&Voli_Salvati[indice],sizeof(VOLO),1,ptr_file))
+	{
+		indice ++;
+	}
+	fclose(ptr_file);
+
+	int scelta = SCENA_DEFAULT;
+	
+
+	while(scelta != 3){
+
+		scelta = Menu_Gestione_Catalogo();
 
 	switch(scelta)
 	{
+		
 		case Aggiungi_volo:
+			
 			
 			temp = Crea_Volo();
 			Salva_volo(temp);
@@ -247,14 +267,27 @@ void Scena_Gestione_Catalogo(void){
 
 		case Modifica_volo:
 
+			Stampa_Voli(Voli_Salvati);
+			char Id_input [MAX_ID];
+			
+			printf("Inserisci l'id del volo da modificare; ");
+			scanf("%s",Id_input);
+
+			Cambia_Volo(Id_input,Voli_Salvati,Numero_voli);
+
+			puts(" ");
+
+			Aggiorna_File(&Voli_Salvati[0],&Voli_Salvati[Numero_voli],FILE_NAME_FLY);
+
 		
 
 		break;
 
 		default:
-			printf("%d\n",scelta);
+			
 		break;
 	}
+}
 	
 
 	

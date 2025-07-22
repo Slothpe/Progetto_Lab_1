@@ -49,6 +49,7 @@ typedef enum{
 	Aggiungi_volo,
 	Modifica_volo,
 	Cancella_volo,
+	Esci,
 
 
 }GESTIONE_CATALOGO;
