@@ -22,12 +22,6 @@
  Password: Rocco.12
 
  */
-/*
-	Dal account amministratore dobbiamo creare i voli e salvarlo nel file binario fly, Dobbiamo poter cancellare i voli,
-	Modificare i voli e salvare tutte le modifiche nel file;
-
-
- */
 
 int main(void)
 {
@@ -35,6 +29,7 @@ int main(void)
     PROGRAMMA programma;
     programma.stato_programma = true;
     programma.scena = SCENA_DEFAULT;
+
 
     printAirPlane();
 

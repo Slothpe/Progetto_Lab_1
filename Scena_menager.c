@@ -235,7 +235,7 @@ void Scena_Home_Amministratore(PROGRAMMA* programma) {
 void Scena_Gestione_Catalogo(void){
 
 	int Numero_voli = Conta_Elementi(FILE_NAME_FLY);
-	VOLO Voli_Salvati[Numero_voli];
+	VOLO Voli_Salvati[Numero_voli-1];
 	FILE *ptr_file = fopen(FILE_NAME_FLY,"rb");
 	int indice = 0;
 	VOLO temp;

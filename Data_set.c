@@ -940,14 +940,16 @@ void Stampa_Voli(VOLO voli[])
 {
 
     int numero_voli = Conta_Elementi(FILE_NAME_FLY);
+    printf("Numero dei voli salvati :%d\n",numero_voli);
 
     for (int  i = 0; i < numero_voli; i++)
     { 
+        printf("-------------------------------------------------------------------------\n");
         printf("Partenza: %s\n",voli[i].partenza_origine);
         printf("Destinazione: %s\n",voli[i].destinazione);
         printf("Data: %d.%d.%d\n",voli[i].data.giorno,voli[i].data.mese,voli[i].data.anno);
         printf("Ora: %d:%d\n",voli[i].data.ora,voli[i].data.minuti);
-        printf("Id Aereomobile: %s\n",voli[i].Id_Aereomobile);
+        //printf("Id Aereomobile: %s\n",voli[i].Id_Aereomobile);
         printf("Id volo: %s\n",voli[i].Id_Volo);
         printf("Messaggio: %s\n",voli[i].messaggio);
         printf("Posti business: %d\n",voli[i].posti_business);
@@ -956,6 +958,7 @@ void Stampa_Voli(VOLO voli[])
         printf("Posti prima classe: %d\n",voli[i].posti_prima_classe);
         printf("Stato volo: %d\n",voli[i].Stato_volo);
         
+        printf("Personale di volo:\n");
         for(int j = 0; j < NUMERO_PERSONALE; j++)
         {
             printf("%s %s %s %s %d\n",voli[i].personale[j].nome,voli[i].personale[j].cognome,voli[i].personale[j].Id,voli[i].personale[j].ruolo,voli[i].personale[j].occupato);
@@ -968,21 +971,33 @@ void Stampa_Voli(VOLO voli[])
 void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli)
 {
     int Stato = 0;
-    int posizione = 0;
-    bool trovato = false;
+    int Posizione = 0;
+    bool Trovato = false;
+    FILE *Ptr_file = fopen(FILE_NAME_PERSONALE,"rb");
+    int  Numero_Personale = Conta_Elementi(FILE_NAME_PERSONALE);
+
+    PERSONALE_VOLO Personale[Numero_Personale];
+    int indice = 0;
+
+    while (fread(&Personale[indice],sizeof(PERSONALE_VOLO),1,Ptr_file)!= 0)
+    {
+        indice ++;
+    }
+
+    fclose(Ptr_file);
 
     for (int i = 0; i < Numero_Voli; i++)
     {
         if (strcmp(Id_input,Voli_Salvati[i].Id_Volo) == 0)
         {
             printf("Volo trovato\n");
-            posizione = i;
-            trovato = true;
+            Posizione = i;
+            Trovato = true;
         }
     }
     
     int scelta = SCENA_DEFAULT;
-    if (trovato == true)
+    if (Trovato == true)
     {
         do{
 
@@ -994,7 +1009,8 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli)
         printf("Premi 6: per modificare i Posti economy\n");
         printf("Premi 7: per modificare i Posti prima classe\n");
         printf("Premi 8: per modificare lo Stato volo\n");
-        printf("Premi 9: per chiudere il tornare indietro\n");
+        printf("Premi 9: per modificare il personale di bordo\n");
+        printf("Premi 10: per tornanre indietro\n");
 
         fflush(stdin);
         scanf("%d",&scelta);
@@ -1002,17 +1018,17 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli)
         switch (scelta)
         {
         case 1:
-                Inserisci_Luogo_Partenza(Voli_Salvati[posizione].partenza_origine);
+                Inserisci_Luogo_Partenza(Voli_Salvati[Posizione].partenza_origine);
             break;
 
         case 2:
            
-                Inserisci_Luogo_Destinazione(Voli_Salvati[posizione].destinazione);
+                Inserisci_Luogo_Destinazione(Voli_Salvati[Posizione].destinazione);
             break;
 
          case 3:
            
-                Voli_Salvati[posizione].data = Inserisci_Data_Volo();
+                Voli_Salvati[Posizione].data = Inserisci_Data_Volo();
             break;
 
          case 4:
@@ -1025,16 +1041,16 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli)
 
                 if (messaggio_scelta == 1)
                 {
-                    strcpy(Voli_Salvati[posizione].messaggio,"Cancellato");
+                    strcpy(Voli_Salvati[Posizione].messaggio,"Cancellato");
                 }
                 else if(messaggio_scelta == 2)
                 {
-                    strcpy(Voli_Salvati[posizione].messaggio,"Ritardo");
+                    strcpy(Voli_Salvati[Posizione].messaggio,"Ritardo");
                 }
                 else if(messaggio_scelta == 3)
                 {
                     printf("Inserisci il messaggio: ");
-                    scanf("%s",Voli_Salvati[posizione].messaggio);
+                    scanf("%s",Voli_Salvati[Posizione].messaggio);
                 }else
                 {
                     printf("Scelta sbagliata\n");
@@ -1047,7 +1063,7 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli)
 
                 printf("Inserisci il numero dei posti Business\n");
                 fflush(stdin);
-                scanf("%d",&Voli_Salvati[posizione].posti_business);
+                scanf("%d",&Voli_Salvati[Posizione].posti_business);
            
             break;
 
@@ -1055,7 +1071,7 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli)
            
                 printf("Inserisci il numero dei posti economy\n");
                 fflush(stdin);
-                scanf("%d",&Voli_Salvati[posizione].posti_economy);
+                scanf("%d",&Voli_Salvati[Posizione].posti_economy);
 
             break;
 
@@ -1063,7 +1079,7 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli)
            
                 printf("Inserisci il numero dei posti Prima classe\n");
                 fflush(stdin);
-                scanf("%d",&Voli_Salvati[posizione].posti_prima_classe);
+                scanf("%d",&Voli_Salvati[Posizione].posti_prima_classe);
 
             break;
 
@@ -1077,11 +1093,11 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli)
 
                     if (Stato == 0)
                     {
-                        Voli_Salvati[posizione].Stato_volo = false;
+                        Voli_Salvati[Posizione].Stato_volo = false;
                     }
                     else if (Stato == 1)
                     {
-                        Voli_Salvati[posizione].Stato_volo = true;
+                        Voli_Salvati[Posizione].Stato_volo = true;
                     }
                     else
                     {
@@ -1091,20 +1107,46 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli)
             break;
         
             case 9:
-                    printf("Chiusura del menù\n");
+                       
+                        
+                     
+                    for (int i = 0; i < Numero_Personale; i++)
+                    {
+                        for(int j = 0; j < NUMERO_PERSONALE; j++)
+                        {
+                        if(strcmp(Personale[i].Id,Voli_Salvati[Posizione].personale[j].Id) == 0)
+                        {
+                            Personale[i].occupato = false;
+                            printf("%s %s %d\n",Personale[i].nome,Personale[i].cognome,Personale[i].occupato);
+                            
+                        }
+                        }
+                    }
+
+
+                    Aggiorna_File(&Personale[0],&Personale[Numero_Personale],FILE_NAME_PERSONALE);
+
+                    Voli_Salvati[Posizione] = Associa_Personale_volo(Voli_Salvati[Posizione]);
+
+                    Salva_volo(Voli_Salvati[Posizione]);
+                    
+                    
+            break;
+
+            case 10:
+                        printf("Chiusura del menù\n");
             break;
 
         default:
 
-                    printf("Scelta non disponibile\n");
+                        printf("Scelta non disponibile\n");
             break;
         }
 
         Aggiorna_File(&Voli_Salvati[0],&Voli_Salvati[Numero_Voli],FILE_NAME_FLY);
 
-    }while(scelta != 9);
+    }while(scelta != 10);
 
 }
     
-
 }

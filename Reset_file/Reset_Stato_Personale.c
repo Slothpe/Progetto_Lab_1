@@ -46,7 +46,7 @@ int main(void)
 
     rewind(ptr_file);
     contatore ++ ;
-    PERSONALE_VOLO array[contatore+1];
+    PERSONALE_VOLO array[contatore-1];
 
     int index = 0;
     while(fread(&temp,sizeof(PERSONALE_VOLO),1,ptr_file)!= 0)
@@ -64,7 +64,7 @@ int main(void)
     ptr_file = fopen(FILE_NAME_PERSONALE, "wb");
     
     printf("Modifico lo stato da occupato a libero\n");
-    for(int i = 0; i < contatore; i++)
+    for(int i = 0; i < contatore-1; i++)
     {
 
         printf("PRIMA: %s %d\n",array[i].nome, array[i].occupato);
