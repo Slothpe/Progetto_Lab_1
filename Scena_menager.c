@@ -4,6 +4,7 @@
 //
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include "Scena_menager.h"
@@ -229,16 +230,18 @@ void Scena_Home_Amministratore(PROGRAMMA* programma) {
 		
 	}while (scelta != 0);
 }
-//11:55 ti ha scritto serena
-//risposta alle 12:07 
-//11:57
+
+
 void Scena_Gestione_Catalogo(void){
 
+	char Id_input [MAX_ID];
 	int Numero_voli = Conta_Elementi(FILE_NAME_FLY);
-	VOLO Voli_Salvati[Numero_voli-1];
+	VOLO Voli_Salvati[Numero_voli];
+	VOLO Lista_Aggiornata [Numero_voli-1]; // Array per cancellare un volo
 	FILE *ptr_file = fopen(FILE_NAME_FLY,"rb");
 	int indice = 0;
 	VOLO temp;
+
 
 	//devo salvare i voli nel array voli_salvati
 	while (fread(&Voli_Salvati[indice],sizeof(VOLO),1,ptr_file))
@@ -246,6 +249,8 @@ void Scena_Gestione_Catalogo(void){
 		indice ++;
 	}
 	fclose(ptr_file);
+
+	indice = 0;
 
 	int scelta = SCENA_DEFAULT;
 	
@@ -268,23 +273,46 @@ void Scena_Gestione_Catalogo(void){
 		case Modifica_volo:
 
 			Stampa_Voli(Voli_Salvati);
-			char Id_input [MAX_ID];
 			
 			printf("Inserisci l'id del volo da modificare; ");
 			scanf("%s",Id_input);
 
 			Cambia_Volo(Id_input,Voli_Salvati,Numero_voli);
-
-			puts(" ");
-
-			Aggiorna_File(&Voli_Salvati[0],&Voli_Salvati[Numero_voli],FILE_NAME_FLY);
-
 		
 
 		break;
 
+		case Cancella_volo:
+
+			printf("Inserisci l'id del volo da cancellare; ");
+			scanf("%s",Id_input);
+
+			
+
+			indice = 0;
+
+			for (int i = 0; i < Numero_voli; i++)
+			{
+				if (strcmp(Id_input,Voli_Salvati[i].Id_Volo) != 0)
+				{
+					Lista_Aggiornata[indice] = Voli_Salvati[i];
+					indice++;
+				}
+				
+			}
+
+			Aggiorna_File(&Lista_Aggiornata[0],&Lista_Aggiornata[indice],FILE_NAME_FLY);
+			printf("Volo Cancellato\n");
+			
+		
+		
+		break;
+
+
+
 		default:
 			
+		
 		break;
 	}
 }

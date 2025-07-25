@@ -892,7 +892,7 @@ void Aggiorna_File(void* min, void* max, char* nome_file)
         PERSONALE_VOLO* ptr_max = (PERSONALE_VOLO*)max;
         FILE* ptr_file = fopen(FILE_NAME_PERSONALE,"wb");
 
-        for ( ;ptr_min <= ptr_max; ptr_min++)
+        for ( ;ptr_min < ptr_max; ptr_min++)
         {
             fwrite(ptr_min,sizeof(PERSONALE_VOLO),1,ptr_file);
             
@@ -909,7 +909,7 @@ void Aggiorna_File(void* min, void* max, char* nome_file)
         VOLO* ptr_max = (VOLO*)max;
         FILE* ptr_file = fopen(FILE_NAME_FLY,"wb");
 
-        for ( ;ptr_min <= ptr_max; ptr_min++)
+        for ( ;ptr_min < ptr_max; ptr_min++)
         {
             fwrite(ptr_min,sizeof(VOLO),1,ptr_file);
             
@@ -925,7 +925,7 @@ void Aggiorna_File(void* min, void* max, char* nome_file)
         UTENTE* ptr_max = (UTENTE*)max;
         FILE* ptr_file = fopen(FILE_NAME_USER,"wb");
 
-        for (;ptr_min <= ptr_max; ptr_min++)
+        for (;ptr_min < ptr_max; ptr_min++)
         {
             fwrite(ptr_min,sizeof(UTENTE),1,ptr_file);
             
@@ -995,6 +995,7 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli)
             Trovato = true;
         }
     }
+
     
     int scelta = SCENA_DEFAULT;
     if (Trovato == true)
@@ -1124,7 +1125,7 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli)
                     }
 
 
-                    Aggiorna_File(&Personale[0],&Personale[Numero_Personale],FILE_NAME_PERSONALE);
+                    Aggiorna_File(&Personale[0],&Personale[Numero_Personale-1],FILE_NAME_PERSONALE);
 
                     Voli_Salvati[Posizione] = Associa_Personale_volo(Voli_Salvati[Posizione]);
 
@@ -1143,7 +1144,11 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli)
             break;
         }
 
+        if(scelta >= 1 && scelta < 10)
+        {
+            
         Aggiorna_File(&Voli_Salvati[0],&Voli_Salvati[Numero_Voli],FILE_NAME_FLY);
+        }
 
     }while(scelta != 10);
 
