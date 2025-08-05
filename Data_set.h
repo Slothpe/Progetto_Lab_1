@@ -43,7 +43,7 @@ typedef struct    //struttura per i dati del volo
     char partenza_origine[MAX_STRINGHE];
     char destinazione[MAX_STRINGHE];
     DATA data;
-    int posti_disponibili[MAX_PASSEGERI];    //massimo posti disponibili 100
+    bool posti_disponibili[MAX_PASSEGERI];    //è diventato booleano, devor ricreari voli e nella funzione crea volo, devo settare sto array tutto su true!
 	int posti_prima_classe;
 	int posti_business;
 	int posti_economy;
@@ -58,7 +58,9 @@ typedef struct{
 	char cognome[MAX_STRINGHE];
 	int numero_posto;
 	char classe[MAX_STRINGHE];
+    int prezzo;
 	VOLO volo;	
+    bool Check_in;
 	
 }BIGLIETTO;
 
@@ -123,11 +125,8 @@ void Generazione_ID_Volo(char[]);
 bool Bisestile(int anno);
 bool Verifica_Data_Bisestile(int giorno, int mese, int anno);
 VOLO Associa_Personale_volo(VOLO);
-VOLO Trova_Volo(VOLO voli[], int num_voli, char* origine, char* destinazione, int giorno, int mese, int anno, int ora, int minuti, int ID_volo);
-bool Check_In(UTENTE* utente, VOLO* volo);
-bool Invia_Segnalazione(UTENTE* utente, char* messaggio);
-void Visualizza_Segnalazioni(UTENTE* utente);
 void Salva_volo(VOLO);
 void Aggiorna_File(void*, void*, char*);
 void Stampa_Voli(VOLO []);
 void Cambia_Volo(char[MAX_ID], VOLO [], int);
+void Trova_Volo(void);

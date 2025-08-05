@@ -25,3 +25,5 @@ void printAirPlane(void);
 int Menu_Pannello_Amministratore(void);
 int Menu_Home_Amministratore(void);
 int Menu_Gestione_Catalogo(void);
+int Menu_Home_Utente(void);
+int Menu_Gestione_Biglietti(void);

@@ -54,6 +54,24 @@ typedef enum{
 
 }GESTIONE_CATALOGO;
 
+typedef enum {
+
+	Esci_U, //chiusura home utente
+	Gestisci_Biglietti,
+	Gestisci_segnalazioni,
+	Gestisci_Profilo,
+
+}HOME_UTENTE;
+
+typedef enum{
+
+	Indietro_Biglietto,
+	Modifica_Biglietto,
+	Canecella_Biglietto,
+	Acquista_Biglietto,
+	Check_In,
+
+}GESTIONE_PRENOTAZIONI;
 
 bool Scena_Chiusura_Programma();
 
@@ -62,9 +80,12 @@ bool Scena_Chiusura_Programma();
 void Scena_Panello_Utente(PROGRAMMA*);
 void Scena_Iscrizione_Utente(void);
 void Scena_Accesso_Utente(PROGRAMMA*);
+void Scena_Home_Utente(PROGRAMMA*);
 
 void Scena_Pannello_Amministratore(PROGRAMMA*);
 void Scena_Iscrizione_Amministratore(void);
 bool Scena_Accesso_Amministratore(PROGRAMMA*);
 void Scena_Home_Amministratore(PROGRAMMA*);
 void Scena_Gestione_Catalogo(void);
+UTENTE Scena_Gestione_Biglietti(UTENTE);
+void Scena_Acquista_Biglietto(UTENTE);

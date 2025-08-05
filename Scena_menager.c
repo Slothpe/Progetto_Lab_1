@@ -1,4 +1,3 @@
-
 //
 // Created by Perrulli Antonio on 26/04/25.
 //
@@ -20,26 +19,32 @@ void Scena_Panello_Utente(PROGRAMMA* programma){
 		
 		switch(scena){
 
-			case Scena_Iscrzione_U:
-			
-			Scena_Iscrizione_Utente();
-			
-			break;
-
-			case Scena_Accesso_U:
-			
-			Scena_Accesso_Utente(&temp);
-			
-			break;
-
 			case Scena_Chiusura_PU:
-			
+
 			printf("Chiusura Pannello Utente\n");
 			
 			break;
-			
-			default:
 
+			case Scena_Iscrzione_U:
+			
+			Scena_Iscrizione_Utente();	
+			
+			break;
+			
+			case Scena_Accesso_U:
+
+			Scena_Accesso_Utente(&temp);
+			
+			break;
+			
+			case Scena_Home_U:
+
+			Scena_Home_Utente(&temp);
+
+			break;
+
+			default:
+			
 			printf("Scelta sbagliata\n");	
 			
 			break;
@@ -47,6 +52,7 @@ void Scena_Panello_Utente(PROGRAMMA* programma){
 	}while(scena != Scena_Chiusura_PU);
 	*programma = temp;
 }
+			
 
 void Scena_Pannello_Amministratore(PROGRAMMA* programma){
 
@@ -213,6 +219,9 @@ void Scena_Home_Amministratore(PROGRAMMA* programma) {
 					 *		ed eventuali cancellazioni
 					 *		ATTENZIONE: forse per fare questa parte bisogna fare la home utente
 					 */
+
+
+
 					break;
 
 				case Prenotazioni_Utenti:
@@ -230,7 +239,6 @@ void Scena_Home_Amministratore(PROGRAMMA* programma) {
 		
 	}while (scelta != 0);
 }
-
 
 void Scena_Gestione_Catalogo(void){
 
@@ -319,4 +327,248 @@ void Scena_Gestione_Catalogo(void){
 	
 
 	
+}
+
+void Scena_Home_Utente(PROGRAMMA* programma)
+{
+	PROGRAMMA temp = *programma;
+	int scena = SCENA_DEFAULT;
+	
+	printf("%d\n",temp.utente_verifcato);
+	if (temp.utente_verifcato == false)
+	{
+		printf("Prima di poter accedere alla home, devi iscriverti oppure fare l'accesso\n");
+	}else
+	{	
+		do
+		{
+			scena = Menu_Home_Utente();
+
+			switch (scena)
+			{
+			case Esci_U:
+				printf("Chiusura del pannello\n");
+				break;
+
+			case Gestisci_Biglietti:
+				
+				temp.utente = Scena_Gestione_Biglietti(temp.utente);
+				break;
+
+			case Gestisci_segnalazioni:
+				/* code */
+				break;
+			
+			case Gestisci_Profilo:
+				/* code */
+				break;
+
+
+			default:
+				break;
+			}
+
+			/* code */
+		} while (scena!= Esci_U);
+		
+		
+
+	}
+}
+	
+UTENTE Scena_Gestione_Biglietti(UTENTE user)
+{
+	int scena = SCENA_DEFAULT;
+
+	do
+	{
+		scena = Menu_Gestione_Biglietti();
+
+		switch (scena)
+		{
+
+		case Indietro_Biglietto:
+			printf("Chiusura del menù\n");
+			break;
+		
+
+
+		case Acquista_Biglietto:
+			
+			Scena_Acquista_Biglietto(user);
+			break;
+		
+
+
+		case Check_In:
+			printf("Chiusura del menù\n");
+			break;
+		
+		default:
+			break;
+		}
+
+		
+	} while (scena != Indietro_Biglietto);
+	
+	return user;
+}
+
+void Scena_Acquista_Biglietto(UTENTE)
+{
+	int numero_voli = Conta_Elementi(FILE_NAME_FLY);
+	int numero_utenti = Conta_Elementi(FILE_NAME_USER);
+	int indice = 0;
+	UTENTE utenti[numero_utenti];
+	VOLO voli[numero_voli];
+	FILE *ptr_file = fopen(FILE_NAME_FLY,"rb");
+	FILE *ptr_file2 = fopen(FILE_NAME_USER"rb");
+
+	while (fread(&utenti[indice],sizeof(UTENTE),1,ptr_file2) != 0)
+	{
+		indice ++;
+	}
+	
+	fclose(ptr_file2);
+	indice = 0;
+
+	while (fread(&voli[indice],sizeof(VOLI),1,ptr_file) != 0)
+	{
+		indice ++;
+	}
+
+	fclose(ptr_file);
+	indice = 0;
+
+	BIGLIETTO ticket;
+	char Id_Volo [MAX_ID];
+	int numero_posto = 0;
+	int scelta = SCENA_DEFAULT;
+	int classe = SCENA_DEFAULT;
+	ticket.Check_in = false;
+
+	
+	Trova_Volo();
+
+	printf("-------------------------------------\n");
+	while (scelta!= 0)
+	{
+		printf("Inserisci 0 per uscire\n");
+		printf("Inserisci 1 per Acquistare il biglietto\n");
+		
+		switch (scelta)
+		{
+		case 0:
+
+			printf("Chiusura della sezione Acquisto biglietto\n");
+
+			break;
+		
+		case 1:
+
+			printf("Inserisci l'Id del volo di cui si vuole acquistare un biglietto\n");
+			fflush(stdin);
+			scanf("%s",Id_Volo);
+
+				for (int  i = 0; i < numero_voli; i++)
+				{
+				
+				if (strcmp(voli[i].Id_Volo,Id_Volo) == 0)
+				{
+					printf("Procedo al acquisto del biglietto\n");
+					strcpy(ticket.nome,utente.nome);
+					strcpy(ticket.cognome,utente.cognome);
+					ticket.volo = voli[i];
+					printf("Inserisci la classe del biglietto\n");
+					while(classe != 1 || classe != 2 ||classe != 3)
+					{
+						printf("Premi 1 per la prima classe\n");
+						printf("Premi 2 per la bussines\n");
+						printf("Premi 3 per l' economy\n");
+
+						scanf("%d",&classe);
+
+						switch (classe)
+						{
+						case 1:
+							
+							printf("Hai scelto la prima classe\n");
+							strcpy(ticket.classe,"Prima classe");
+							ticket.prezzo = 1000;
+							voli[i].posti_prima_classe -= 1;
+
+							break;
+						
+						
+						case 2:
+
+							
+							printf("Hai scelto la bussines\n");
+							strcpy(ticket.classe,"Bussines");
+							ticket.prezzo = 500;
+							voli[i].posti_business -= 1;
+
+							break;
+						
+						
+						case 3:
+
+							printf("Hai scelto l'economy\n");
+							strcpy(ticket.classe,"economy");
+							ticket.prezzo = 100;
+							voli[i].posti_economy -= 1;
+
+							break;
+						
+						
+						default:
+							break;
+						}
+						
+					}
+					
+					do
+					{
+							printf("Inserisci il numero del posto da 0 a 99\n");
+							fflush(stdin);
+
+							scanf("%d",numero_posto);
+
+							if (numero_posto >= 0 && numero_posto < 100)
+							{
+								/*
+									Bisgona aggiungere il seguente controllo:
+									L'acquisizione e l'associazione del biglietto del volo,
+									puo avvenire solo e solamente se il posto selezionato dal
+									utente è libero, in tal caso l'associazione non avviene e 
+									bisgona avvisare l'utente tramite un errore ed continuare
+									a chiedere di reinserire un nuovo numero di posto.
+
+									DUE COGLIONI !!!!!!
+								
+								*/
+								printf("Posto associato\n");
+								voli[i].posti_disponibili[numero_posto] = false;
+							}
+							
+					} while (numero_posto <0 && numero_posto > 100);
+					
+				
+
+				
+			}
+		}
+			
+			break;
+
+		default:
+			break;
+		}
+
+	}
+	
+	
+
+	fclose(ptr_file);
+
 }

@@ -60,6 +60,7 @@ UTENTE Iscrizione_Utente(void){
 
         temp.numero_biglietti_acquistati = 0;
 
+
     return temp;
     }
 
@@ -554,6 +555,12 @@ VOLO Crea_Volo(void) {  //funzione per creare il volo
 
     temp = Associa_Personale_volo(temp);
 
+    for (int i = 0; i < MAX_PASSEGERI; i++)
+    {
+        temp.posti_disponibili[i] = true;
+    }
+    
+
     return temp;
 }
 
@@ -740,117 +747,6 @@ void Salva_volo(VOLO volo){
 		
 }
 
-
-/*
-VOLO Trova_Volo(VOLO voli[], int num_voli, char* origine, char* destinazione, int giorno, int mese, int anno, int ora, int minuti, int Id_Volo) {
-    for (int i = 0; i < num_voli; i++) {
-        // Cerca per ID volo
-        if (Id_Volo != NULL && strcmp(voli[i].Id_Volo, Id_Volo) == 0) {
-            return voli[i];
-        }
-
-        // Cerca per tratta (origine e destinazione)
-        if (origine != NULL && destinazione != NULL &&
-            strcmp(voli[i].partenza_origine, origine) == 0 &&
-            strcmp(voli[i].destinazione, destinazione) == 0) {
-            return voli[i];
-            }
-
-        // Cerca per data
-        if (giorno != -1 && mese != -1 && anno != -1 &&
-            voli[i].data.giorno == giorno &&
-            voli[i].data.mese == mese &&
-            voli[i].data.anno == anno) {
-            return voli[i];
-            }
-
-        // Cerca per orario
-        if (ora != -1 && minuti != -1 &&
-            voli[i].data.ora == ora &&
-            voli[i].data.minuti == minuti) {
-            return voli[i];
-            }
-    }
-
-    // Se nessun volo è trovato, restituisce un volo "vuoto"
-    return (VOLO) {0};
-}
-*/
-
-/*
-bool Check_In(UTENTE* utente, VOLO* volo) {
-    // Controlla se il volo è attivo
-    if (!volo->Stato_volo) {
-        printf("Il volo %s è stato cancellato o non è attivo.\n", volo->Id_Volo);
-        return false; // Se il volo è cancellato, il check-in fallisce
-    }
-
-    // Mostra i posti disponibili
-    printf("Posti disponibili:\n");
-    for (int i = 0; i < MAX_PASSEGERI; i++) {
-        if (volo->posti_disponibili[i] == 0) { // Se il posto è libero (0), lo stampa
-            printf("Posto %d\n", i + 1);
-        }
-    }
-
-    // Richiede all'utente di scegliere un posto
-    int scelta_posto;
-    printf("Inserisci il numero di posto che vuoi selezionare: ");
-    scanf("%d", &scelta_posto);
-
-    // Verifica che il numero scelto sia valido e che il posto sia libero
-    if (scelta_posto < 1 || scelta_posto > MAX_PASSEGERI || volo->posti_disponibili[scelta_posto - 1] != 0) {
-        printf("Posto non disponibile o numero errato.\n");
-        return false; // Se il posto non è valido, il check-in fallisce
-    }
-
-    // Assegna il posto selezionato all'utente e aggiorna il volo
-    volo->posti_disponibili[scelta_posto - 1] = 1; // Segna il posto come occupato
-    utente->biglietti_utente[utente->numero_biglietti_acquistati - 1].numero_posto = scelta_posto;  //salva il numero del posto scelto
-
-    // Conferma la registrazione del check-in
-    printf("Check-in completato! Posto %d assegnato.\n", scelta_posto);
-    return true; // Indica che il check-in è stato completato con successo
-}
-
-bool Invia_Segnalazione(UTENTE* utente, char* messaggio) {
-    // Controlla che l'utente non abbia superato il numero massimo di segnalazioni (5)
-    if (utente->num_segnalazioni < 5) {
-        // Copia il messaggio all'interno dell'array delle segnalazioni dell'utente
-        strcpy(utente->segnalazioni[utente->num_segnalazioni], messaggio);
-
-        // Incrementa il numero di segnalazioni registrate per l'utente
-        utente->num_segnalazioni++;
-
-        // Stampa un messaggio di conferma per l'utente
-        printf(" Segnalazione registrata per %s %s.\n", utente->nome, utente->cognome);
-        return true;  // Conferma che la segnalazione è stata inviata con successo
-    } else {
-        // Se l'utente ha già inviato il massimo numero di segnalazioni, stampa un messaggio di errore
-        printf(" Numero massimo di segnalazioni raggiunto.\n");
-        return false;  // Indica che la segnalazione non può essere registrata
-    }
-}
-
-void Visualizza_Segnalazioni(UTENTE* utente) {
-    printf("\n📢 Segnalazioni per %s %s\n", utente->nome, utente->cognome);
-    printf("-----------------------------------\n");
-
-    // Controlla se l'utente ha inviato almeno una segnalazione
-    if (utente->num_segnalazioni == 0) {
-        printf("Nessuna segnalazione presente.\n");  // Avvisa che non ci sono segnalazioni registrate
-        return;
-    }
-
-    // Itera attraverso tutte le segnalazioni registrate per l'utente
-    for (int i = 0; i < utente->num_segnalazioni; i++) {
-        printf(" Segnalazione #%d: %s\n", i + 1, utente->segnalazioni[i]);  // Stampa ogni segnalazione registrata
-    }
-
-    printf("-----------------------------------\n");
-}
-*/
-
 void Aggiorna_File(void* min, void* max, char* nome_file)
 {
 
@@ -936,6 +832,7 @@ void Aggiorna_File(void* min, void* max, char* nome_file)
     }
     
 }
+
 void Stampa_Voli(VOLO voli[])
 {
 
@@ -966,7 +863,6 @@ void Stampa_Voli(VOLO voli[])
 
     }
 }
-
 
 void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli)
 {
@@ -1154,4 +1050,68 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli)
 
 }
     
+}
+
+void Trova_Volo(void)
+{
+    FILE* ptr_file = fopen(FILE_NAME_FLY, "rb");
+    char Luogo_Partenza[MAX_STRINGHE];
+    char Luogo_Destinazione[MAX_STRINGHE];
+    DATA data_min;
+    DATA data_max;
+    bool trovato = false;
+    int numero_voli = Conta_Elementi(FILE_NAME_FLY);
+    int indice = 0;
+    VOLO voli_salvati[numero_voli];
+
+    while (fread(&voli_salvati[indice],sizeof(VOLO),1,ptr_file)!= 0)
+    {
+        indice ++;
+    }
+    
+    fclose(ptr_file);
+    do
+    {
+        if (trovato == false)
+        {
+            printf("Inserisci il luogo di partenza: ");
+            scanf("%s",Luogo_Partenza);
+            puts(" ");
+
+            printf("Inserisci il luogo di destinazione: ");
+            scanf("%s",Luogo_Destinazione);
+            puts(" ");
+
+            printf("Dovrai inseire un range di date nel quale trovale il volo\n");
+            printf("Inserisci la prima data\n");
+            data_min = Inserisci_Data_Volo();
+
+            printf("Inserisci la seconda data\n");
+            data_max = Inserisci_Data_Volo();
+        }
+        
+        printf("Questi voli coincidono con il range di date inserite\n");
+        for (int i = 0; i < numero_voli; i++)
+        {
+            if (strcmp(voli_salvati[i].partenza_origine,Luogo_Partenza) == 0 && strcmp(voli_salvati[i].destinazione,Luogo_Destinazione) == 0)
+            {
+                if (voli_salvati[i].data.giorno >= data_min.giorno && voli_salvati[i].data.mese >= data_min.mese && voli_salvati[i].data.anno >= data_min.anno)
+                {
+                     if (voli_salvati[i].data.giorno <= data_max.giorno && voli_salvati[i].data.mese <= data_max.mese && voli_salvati[i].data.anno <= data_max.anno)
+                    {
+                        trovato = true;
+                        printf("---------------------------------------------------------------------------------\n");
+                        printf("Luogo di Partenza: %s\n",voli_salvati[i].partenza_origine);
+                        printf("Luogo di Arrivo: %s\n",voli_salvati[i].destinazione);
+                        printf("Orario e data del volo: %d.%d.%d Ore: %d:%d\n",voli_salvati[i].data.giorno,voli_salvati[i].data.mese,voli_salvati[i].data.anno,voli_salvati[i].data.ora,voli_salvati[i].data.minuti);
+                        printf("Per acquistare il biglietto di questo volo, ti verra richiesto l'id associato\n");
+                        printf("Id del volo: %s\n",voli_salvati[i].Id_Volo);
+                    }
+                }
+                 
+            }    
+        }
+    } while (trovato == false);
+
+    (trovato == true ? printf("\n") : printf("Nessun volo trovato, modifica le date o la destinazione\n"));
 }

@@ -55,9 +55,10 @@ int Menu_Pannello_Utente(void){
 	int scelta = SCENA_DEFAULT;
 	printf("--------MENU UTENTE----------\n");
 	printf("Premi 0: uscire\n");
-	printf("Premi 1: per isciriverti\n");
+	printf("Premi 1: per iscriverti\n");
 	printf("Premi 2: per accedere\n");
-	printf("Premi 3: per la home\n");
+	printf("Premi 3: per accedere alla home\n");
+	
 	
 	fflush(stdin);
 	scanf("%d",&scelta);
@@ -110,3 +111,35 @@ int Menu_Gestione_Catalogo(void) {
 	return scelta;
 }
 
+int Menu_Home_Utente(void) {
+	
+	int scelta = SCENA_DEFAULT;
+
+	printf("\n--------- HOME UTENTE ---------\n");
+	printf("Premi 0: Torna indietro\n");
+	printf("Premi 1: Gestire i biglietti\n"); //Acquista biglietto
+	printf("Premi 2: Effettua check-in\n");
+	printf("Premi 3: Gestire le segnalazioni\n");
+	printf("Premi 4: Gestire il profilo\n");
+
+	fflush(stdin);
+	scanf("%d", &scelta);
+	return scelta;
+}
+
+int Menu_Gestione_Biglietti(void)
+{
+	int scelta = SCENA_DEFAULT;
+
+	printf("\n--------- HOME UTENTE ---------\n");
+	printf("Premi 0: Torna indietro\n");
+	printf("Premi 1: Modificare i biglietti\n"); //Acquista biglietto
+	printf("Premi 2: Cancellare i biglietti\n");
+	printf("Premi 3: Acquistare i biglietti\n");
+	printf("Premi 4: Check_In\n");
+
+	fflush(stdin);
+	scanf("%d", &scelta);
+	return scelta;
+
+}
