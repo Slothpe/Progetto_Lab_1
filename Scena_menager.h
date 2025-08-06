@@ -88,4 +88,4 @@ bool Scena_Accesso_Amministratore(PROGRAMMA*);
 void Scena_Home_Amministratore(PROGRAMMA*);
 void Scena_Gestione_Catalogo(void);
 UTENTE Scena_Gestione_Biglietti(UTENTE);
-void Scena_Acquista_Biglietto(UTENTE);
+UTENTE Scena_Acquista_Biglietto(UTENTE);

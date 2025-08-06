@@ -53,7 +53,6 @@ void Scena_Panello_Utente(PROGRAMMA* programma){
 	*programma = temp;
 }
 			
-
 void Scena_Pannello_Amministratore(PROGRAMMA* programma){
 
 
@@ -395,7 +394,7 @@ UTENTE Scena_Gestione_Biglietti(UTENTE user)
 
 		case Acquista_Biglietto:
 			
-			Scena_Acquista_Biglietto(user);
+			user = Scena_Acquista_Biglietto(user);
 			break;
 		
 
@@ -414,16 +413,18 @@ UTENTE Scena_Gestione_Biglietti(UTENTE user)
 	return user;
 }
 
-void Scena_Acquista_Biglietto(UTENTE)
+UTENTE Scena_Acquista_Biglietto(UTENTE user)
 {
-	int numero_voli = Conta_Elementi(FILE_NAME_FLY);
-	int numero_utenti = Conta_Elementi(FILE_NAME_USER);
-	int indice = 0;
-	UTENTE utenti[numero_utenti];
-	VOLO voli[numero_voli];
+	int numero_voli = Conta_Elementi(FILE_NAME_FLY); //Numero di voli salvati nel file
+	int numero_utenti = Conta_Elementi(FILE_NAME_USER); //Numero di utenti isciritti al programma
+	int indice = 0; //indice per riempire l'array
+	UTENTE utenti[numero_utenti]; //Array che contiene tutti gli utenti salvati nel file
+	VOLO voli[numero_voli];//Array che contiene tutti i voli salvati nel file 
 	FILE *ptr_file = fopen(FILE_NAME_FLY,"rb");
-	FILE *ptr_file2 = fopen(FILE_NAME_USER"rb");
+	FILE *ptr_file2 = fopen(FILE_NAME_USER,"rb");
 
+
+	//Associazione al array gli utenti salvati nel file
 	while (fread(&utenti[indice],sizeof(UTENTE),1,ptr_file2) != 0)
 	{
 		indice ++;
@@ -432,7 +433,8 @@ void Scena_Acquista_Biglietto(UTENTE)
 	fclose(ptr_file2);
 	indice = 0;
 
-	while (fread(&voli[indice],sizeof(VOLI),1,ptr_file) != 0)
+	//Associazione al array dei voli salvati nel file
+		while (fread(&voli[indice],sizeof(VOLO),1,ptr_file) != 0)
 	{
 		indice ++;
 	}
@@ -440,12 +442,13 @@ void Scena_Acquista_Biglietto(UTENTE)
 	fclose(ptr_file);
 	indice = 0;
 
-	BIGLIETTO ticket;
+	BIGLIETTO ticket; 
 	char Id_Volo [MAX_ID];
 	int numero_posto = 0;
 	int scelta = SCENA_DEFAULT;
 	int classe = SCENA_DEFAULT;
 	ticket.Check_in = false;
+	bool associato = false;
 
 	
 	Trova_Volo();
@@ -455,6 +458,8 @@ void Scena_Acquista_Biglietto(UTENTE)
 	{
 		printf("Inserisci 0 per uscire\n");
 		printf("Inserisci 1 per Acquistare il biglietto\n");
+		fflush(stdin);
+		scanf("%d",&scelta);
 		
 		switch (scelta)
 		{
@@ -476,11 +481,11 @@ void Scena_Acquista_Biglietto(UTENTE)
 				if (strcmp(voli[i].Id_Volo,Id_Volo) == 0)
 				{
 					printf("Procedo al acquisto del biglietto\n");
-					strcpy(ticket.nome,utente.nome);
-					strcpy(ticket.cognome,utente.cognome);
+					strcpy(ticket.nome,user.nome);
+					strcpy(ticket.cognome,user.cognome);
 					ticket.volo = voli[i];
 					printf("Inserisci la classe del biglietto\n");
-					while(classe != 1 || classe != 2 ||classe != 3)
+					while(classe != 1 && classe != 2 && classe != 3)
 					{
 						printf("Premi 1 per la prima classe\n");
 						printf("Premi 2 per la bussines\n");
@@ -532,43 +537,41 @@ void Scena_Acquista_Biglietto(UTENTE)
 							printf("Inserisci il numero del posto da 0 a 99\n");
 							fflush(stdin);
 
-							scanf("%d",numero_posto);
+							scanf("%d",&numero_posto);
 
-							if (numero_posto >= 0 && numero_posto < 100)
+							if (numero_posto >= 0 && numero_posto < 100 && voli[i].posti_disponibili[numero_posto] == true)
 							{
-								/*
-									Bisgona aggiungere il seguente controllo:
-									L'acquisizione e l'associazione del biglietto del volo,
-									puo avvenire solo e solamente se il posto selezionato dal
-									utente è libero, in tal caso l'associazione non avviene e 
-									bisgona avvisare l'utente tramite un errore ed continuare
-									a chiedere di reinserire un nuovo numero di posto.
-
-									DUE COGLIONI !!!!!!
-								
-								*/
+								associato = true;
 								printf("Posto associato\n");
+								ticket.numero_posto = numero_posto;
 								voli[i].posti_disponibili[numero_posto] = false;
+								user.biglietti_utente[user.numero_biglietti_acquistati] = ticket;
+								user.numero_biglietti_acquistati ++;
+								for (int i = 0; i < numero_utenti; i++)
+								{
+									if (strcmp(utenti[i].numero_documeto, user.numero_documeto) == 0)
+									{
+										utenti[i] = user;
+									}
+									
+								}
+								
 							}
 							
-					} while (numero_posto <0 && numero_posto > 100);
-					
-				
-
-				
+					} while (associato == false);
 			}
 		}
-			
 			break;
 
 		default:
 			break;
 		}
-
 	}
-	
-	
 
-	fclose(ptr_file);
+	Aggiorna_File(&utenti[0],&utenti[numero_utenti],FILE_NAME_PERSONALE);
+	Aggiorna_File(&voli[0],&voli[numero_voli],FILE_NAME_FLY);
+
+	return user;
+
 
 }
