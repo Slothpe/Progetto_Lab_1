@@ -24,14 +24,11 @@
  */
 
 int main(void)
-{
-
-  
+{   
     PROGRAMMA programma;
     programma.stato_programma = true;
     programma.scena = SCENA_DEFAULT;
-
-
+    
     printAirPlane();
 
     while (programma.stato_programma == true)
@@ -74,6 +71,6 @@ int main(void)
 
         }
 
-    
     return 0;
+    
 }

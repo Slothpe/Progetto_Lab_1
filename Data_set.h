@@ -15,6 +15,7 @@
 #define MAX_STRINGHE 20
 #define MAX_ID 10
 #define NUMERO_PERSONALE 4
+#define MAX_NUMERO_BIGLIETTO 12
 
 
 typedef struct {
@@ -54,6 +55,7 @@ typedef struct    //struttura per i dati del volo
 
 typedef struct{
 
+    char numero_biglietto[MAX_NUMERO_BIGLIETTO]; //Biglietto composto da prima due lettere e poi tutti nuneri
 	char nome[MAX_STRINGHE];
 	char cognome[MAX_STRINGHE];
 	int numero_posto;
@@ -130,3 +132,5 @@ void Aggiorna_File(void*, void*, char*);
 void Stampa_Voli(VOLO []);
 void Cambia_Volo(char[MAX_ID], VOLO [], int);
 void Trova_Volo(void);
+void Genera_Numero_Biglietto(char [MAX_NUMERO_BIGLIETTO]);
+void Stampa_Biglietti_Utente(UTENTE);

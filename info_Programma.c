@@ -16,7 +16,6 @@
 
 */
 
-
 int Menu_Principale(void) {
 
     int scelta = SCENA_DEFAULT;
@@ -65,6 +64,7 @@ int Menu_Pannello_Utente(void){
 	return scelta;
 	
 }
+
 int Menu_Pannello_Amministratore(void){
 
 	
@@ -118,9 +118,8 @@ int Menu_Home_Utente(void) {
 	printf("\n--------- HOME UTENTE ---------\n");
 	printf("Premi 0: Torna indietro\n");
 	printf("Premi 1: Gestire i biglietti\n"); //Acquista biglietto
-	printf("Premi 2: Effettua check-in\n");
-	printf("Premi 3: Gestire le segnalazioni\n");
-	printf("Premi 4: Gestire il profilo\n");
+	printf("Premi 2: Gestire le segnalazioni\n");
+	printf("Premi 3: Gestire il profilo\n");
 
 	fflush(stdin);
 	scanf("%d", &scelta);

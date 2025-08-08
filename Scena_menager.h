@@ -76,16 +76,18 @@ typedef enum{
 bool Scena_Chiusura_Programma();
 
 
-
+//SCENE UETENTE
 void Scena_Panello_Utente(PROGRAMMA*);
 void Scena_Iscrizione_Utente(void);
 void Scena_Accesso_Utente(PROGRAMMA*);
 void Scena_Home_Utente(PROGRAMMA*);
+UTENTE Scena_Gestione_Biglietti(UTENTE);
+UTENTE Scena_Acquista_Biglietto(UTENTE);
+UTENTE Scena_Cancella_Biglietto(UTENTE, UTENTE [], VOLO [], int,int);
 
+//SCENE AMMINISTRATORE
 void Scena_Pannello_Amministratore(PROGRAMMA*);
 void Scena_Iscrizione_Amministratore(void);
 bool Scena_Accesso_Amministratore(PROGRAMMA*);
 void Scena_Home_Amministratore(PROGRAMMA*);
 void Scena_Gestione_Catalogo(void);
-UTENTE Scena_Gestione_Biglietti(UTENTE);
-UTENTE Scena_Acquista_Biglietto(UTENTE);

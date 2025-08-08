@@ -15,6 +15,7 @@
 #define MAX_STRINGHE 20
 #define MAX_ID 10
 #define NUMERO_PERSONALE 4
+#define MAX_NUMERO_BIGLIETTO 12
 
 
 typedef struct {
@@ -54,6 +55,7 @@ typedef struct    //struttura per i dati del volo
 
 typedef struct{
 
+    char numero_biglietto[MAX_NUMERO_BIGLIETTO]; //Biglietto composto da prima due lettere e poi tutti nuneri
 	char nome[MAX_STRINGHE];
 	char cognome[MAX_STRINGHE];
 	int numero_posto;
@@ -98,6 +100,8 @@ typedef struct {   //struttura per i dati dell'amministratore
 
 }AMMINISTRATORE;
 
+
+
 int main(void)
 {
     FILE* ptr_file = fopen(FILE_NAME_USER,"rb");
@@ -106,6 +110,15 @@ int main(void)
     while (fread(&temp,sizeof(UTENTE),1,ptr_file) != 0)
     {
         printf("%s %s %s\n",temp.nome,temp.cognome,temp.password);
+        printf("BIGLIETTO\n");
+        printf("Nome:%s\n",temp.biglietti_utente[0].nome);
+        printf("Cognome:%s\n",temp.biglietti_utente[0].cognome);
+        printf("Classe:%s\n",temp.biglietti_utente[0].classe);
+        printf("Numero Biglietto\n%s\n",temp.biglietti_utente[0].numero_biglietto);
+        printf("Numero posto: %d\n",temp.biglietti_utente[0].numero_posto);
+        printf("Prezzo Biglietto: %d\n",temp.biglietti_utente[0].prezzo);
+        printf("Id del volo: %s\n",temp.biglietti_utente[0].volo.Id_Volo);
+
     }
     
 

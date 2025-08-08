@@ -333,14 +333,13 @@ void Scena_Home_Utente(PROGRAMMA* programma)
 	PROGRAMMA temp = *programma;
 	int scena = SCENA_DEFAULT;
 	
-	printf("%d\n",temp.utente_verifcato);
 	if (temp.utente_verifcato == false)
 	{
 		printf("Prima di poter accedere alla home, devi iscriverti oppure fare l'accesso\n");
 	}else
 	{	
 		do
-		{
+		{	
 			scena = Menu_Home_Utente();
 
 			switch (scena)
@@ -377,7 +376,27 @@ void Scena_Home_Utente(PROGRAMMA* programma)
 	
 UTENTE Scena_Gestione_Biglietti(UTENTE user)
 {
+	FILE* file_Utente = fopen(FILE_NAME_USER,"rb");
+	FILE* file_Voli = fopen(FILE_NAME_FLY,"rb");
+	int numero_voli = Conta_Elementi(FILE_NAME_FLY);
+	int numero_utenti = Conta_Elementi(FILE_NAME_USER);
+	VOLO voli_salvati[numero_voli];
+	UTENTE utenti_salvati [numero_utenti];
+	int indice = 0;
 	int scena = SCENA_DEFAULT;
+
+	while (fread(&voli_salvati[indice],sizeof(VOLO),1,file_Voli) != 0)
+	{
+		indice ++;
+	}
+	
+	indice = 0;
+
+	while (fread(&utenti_salvati[indice],sizeof(UTENTE),1,file_Utente)!= 0)
+	{
+		indice ++;
+	}
+	
 
 	do
 	{
@@ -390,6 +409,11 @@ UTENTE Scena_Gestione_Biglietti(UTENTE user)
 			printf("Chiusura del menù\n");
 			break;
 		
+
+		case Canecella_Biglietto:
+
+			user = Scena_Cancella_Biglietto(user,utenti_salvati,voli_salvati,numero_voli,numero_utenti);
+		break;
 
 
 		case Acquista_Biglietto:
@@ -415,13 +439,14 @@ UTENTE Scena_Gestione_Biglietti(UTENTE user)
 
 UTENTE Scena_Acquista_Biglietto(UTENTE user)
 {
+	
 	int numero_voli = Conta_Elementi(FILE_NAME_FLY); //Numero di voli salvati nel file
-	int numero_utenti = Conta_Elementi(FILE_NAME_USER); //Numero di utenti isciritti al programma
-	int indice = 0; //indice per riempire l'array
+	int numero_utenti = Conta_Elementi(FILE_NAME_USER); //Numero di utenti isciritti al programma	int indice = 0; //indice per riempire l'array
 	UTENTE utenti[numero_utenti]; //Array che contiene tutti gli utenti salvati nel file
 	VOLO voli[numero_voli];//Array che contiene tutti i voli salvati nel file 
 	FILE *ptr_file = fopen(FILE_NAME_FLY,"rb");
 	FILE *ptr_file2 = fopen(FILE_NAME_USER,"rb");
+	int indice = 0;
 
 
 	//Associazione al array gli utenti salvati nel file
@@ -478,7 +503,7 @@ UTENTE Scena_Acquista_Biglietto(UTENTE user)
 				for (int  i = 0; i < numero_voli; i++)
 				{
 				
-				if (strcmp(voli[i].Id_Volo,Id_Volo) == 0)
+				if (strcmp(voli[i].Id_Volo,Id_Volo) == 0 && (voli[i].posti_economy + voli[i].posti_prima_classe + voli[i].posti_business) > 0)
 				{
 					printf("Procedo al acquisto del biglietto\n");
 					strcpy(ticket.nome,user.nome);
@@ -498,20 +523,34 @@ UTENTE Scena_Acquista_Biglietto(UTENTE user)
 						case 1:
 							
 							printf("Hai scelto la prima classe\n");
-							strcpy(ticket.classe,"Prima classe");
-							ticket.prezzo = 1000;
-							voli[i].posti_prima_classe -= 1;
+							if (voli[i].posti_prima_classe > 0)
+							{
+								strcpy(ticket.classe,"Prima classe");
+								ticket.prezzo = 1000;
+								voli[i].posti_prima_classe -= 1;
+							}else
+							{
+								printf("Non ci sono posti disponibili\n");
+							}
+							
+							
 
 							break;
 						
 						
 						case 2:
-
 							
 							printf("Hai scelto la bussines\n");
-							strcpy(ticket.classe,"Bussines");
-							ticket.prezzo = 500;
-							voli[i].posti_business -= 1;
+
+							if(voli[i].posti_business > 0)
+							{
+								strcpy(ticket.classe,"Bussines");
+								ticket.prezzo = 500;
+								voli[i].posti_business -= 1;
+							}else
+							{
+								printf("Non ci sono posti disoponibili\n");
+							}
 
 							break;
 						
@@ -519,9 +558,18 @@ UTENTE Scena_Acquista_Biglietto(UTENTE user)
 						case 3:
 
 							printf("Hai scelto l'economy\n");
-							strcpy(ticket.classe,"economy");
-							ticket.prezzo = 100;
-							voli[i].posti_economy -= 1;
+
+							if(voli[i].posti_economy > 0)
+							{
+								strcpy(ticket.classe,"economy");
+								ticket.prezzo = 100;
+								voli[i].posti_economy -= 1;
+							}
+							else
+							{
+								printf("Non ci sono posti disponibili\n");
+							}
+						
 
 							break;
 						
@@ -534,6 +582,7 @@ UTENTE Scena_Acquista_Biglietto(UTENTE user)
 					
 					do
 					{
+
 							printf("Inserisci il numero del posto da 0 a 99\n");
 							fflush(stdin);
 
@@ -544,9 +593,11 @@ UTENTE Scena_Acquista_Biglietto(UTENTE user)
 								associato = true;
 								printf("Posto associato\n");
 								ticket.numero_posto = numero_posto;
+								Genera_Numero_Biglietto(ticket.numero_biglietto);
 								voli[i].posti_disponibili[numero_posto] = false;
 								user.biglietti_utente[user.numero_biglietti_acquistati] = ticket;
 								user.numero_biglietti_acquistati ++;
+								
 								for (int i = 0; i < numero_utenti; i++)
 								{
 									if (strcmp(utenti[i].numero_documeto, user.numero_documeto) == 0)
@@ -568,10 +619,99 @@ UTENTE Scena_Acquista_Biglietto(UTENTE user)
 		}
 	}
 
-	Aggiorna_File(&utenti[0],&utenti[numero_utenti],FILE_NAME_PERSONALE);
+	Aggiorna_File(&utenti[0],&utenti[numero_utenti],FILE_NAME_USER);
 	Aggiorna_File(&voli[0],&voli[numero_voli],FILE_NAME_FLY);
 
 	return user;
 
 
 }
+
+UTENTE Scena_Cancella_Biglietto(UTENTE user, UTENTE utenti_salvati[],VOLO voli_salvati[],int numero_voli, int numero_utenti)
+{
+
+
+	char numero_biglietto[MAX_NUMERO_BIGLIETTO];
+	BIGLIETTO nuovi_biglietti [MAX_BIGLIETTI_UTENTE];
+	int indice = 0;
+	bool cancellato = false;
+
+	if(user.numero_biglietti_acquistati > 0)
+	{
+
+	printf("Biglietti acquistati dal utente (per la cancellazzione, verrà richiesto il numero del biglietto)\n");
+	Stampa_Biglietti_Utente(user);
+	
+	
+	printf("Inserisci il numero del biglietto: ");
+	scanf("%s",numero_biglietto);
+	puts(" ");
+
+
+	for (int i = 0; i < user.numero_biglietti_acquistati; i++)
+	{
+		if (strcmp(numero_biglietto,user.biglietti_utente[i].numero_biglietto) == 0)
+		{	
+			cancellato = true;
+			for (int j = 0; j < numero_voli; j++)
+			{
+					if (strcmp(voli_salvati[j].Id_Volo,user.biglietti_utente[i].volo.Id_Volo) == 0)
+					{
+						if (strcmp(user.biglietti_utente[i].classe,"Prima classe") == 0)
+						{
+							user.biglietti_utente[i].volo.posti_prima_classe ++;
+							user.biglietti_utente[i].volo.posti_disponibili[user.biglietti_utente[i].numero_posto] = true;
+						}else if (strcmp(user.biglietti_utente[i].classe,"Bussines") == 0)
+						{
+							user.biglietti_utente[i].volo.posti_business ++;
+							user.biglietti_utente[i].volo.posti_disponibili[user.biglietti_utente[i].numero_posto] = true;
+						}else if (strcmp(user.biglietti_utente[i].classe,"economy") == 0)
+						{
+							user.biglietti_utente[i].volo.posti_economy ++;
+							user.biglietti_utente[i].volo.posti_disponibili[user.biglietti_utente[i].numero_posto] = true;
+						}						
+					
+						voli_salvati[j] = user.biglietti_utente[i].volo;
+					}		
+			}
+		}
+		else
+		{	printf("SONO QUI\n");
+			nuovi_biglietti[indice] = user.biglietti_utente[i];
+			indice ++;
+		}
+		
+	}
+	if (cancellato == true)
+	{
+		user.numero_biglietti_acquistati --;
+
+	}
+	
+	printf("numero biglietti acquistati :%d\n",user.numero_biglietti_acquistati);
+	for (int i = 0; i < user.numero_biglietti_acquistati; i++)
+	{
+		user.biglietti_utente[i] = nuovi_biglietti[i];
+	}
+	
+	for (int i = 0; i < numero_utenti; i++)
+	{
+		if (strcmp(utenti_salvati[i].numero_documeto,user.numero_documeto) == 0 )
+		{
+			utenti_salvati[i] = user;
+		}
+	}
+	
+	Aggiorna_File(&voli_salvati[0],&voli_salvati[numero_voli],FILE_NAME_FLY);
+	Aggiorna_File(&utenti_salvati[0],&utenti_salvati[numero_utenti],FILE_NAME_USER);
+	
+	printf("Stampo lista aggiornata dei biglietti associati al utente\n");
+	Stampa_Biglietti_Utente(user);
+	
+	}else
+	{
+		printf("Nessun biglietto è stato acquistato\n");
+	}
+	return user;		
+}
+

@@ -214,13 +214,19 @@ int Conta_Elementi(char* stringa) {
     size = ftell(ptr); //restituisce la posizione corrente del file in byte
 
     if(strcmp(stringa,FILE_NAME_PERSONALE) == 0) {
+
         utenti_iscritti = size / sizeof(PERSONALE_VOLO);
 
     }else if(strcmp(stringa,FILE_NAME_FLY) == 0){
+
         utenti_iscritti = size / sizeof(VOLO);
-    }else if(strcmp(stringa,FILE_NAME_ADMIN)) {
+
+    }else if(strcmp(stringa,FILE_NAME_ADMIN) == 0) {
+
         utenti_iscritti = size / sizeof(AMMINISTRATORE);
+
     }else if(strcmp(stringa,FILE_NAME_USER) == 0) {
+
         utenti_iscritti = size / sizeof(UTENTE);
     }
 
@@ -1114,4 +1120,41 @@ void Trova_Volo(void)
     } while (trovato == false);
 
     (trovato == true ? printf("\n") : printf("Nessun volo trovato, modifica le date o la destinazione\n"));
+}
+
+void Genera_Numero_Biglietto(char numero_biglietto [MAX_NUMERO_BIGLIETTO])
+{
+    srand(time(NULL));
+
+
+     for (int i = 0; i < 2; i++) {
+        numero_biglietto[i] = 'A' + rand() % 26;  //genera lettere random maiuscole nelle prime 3 posizioni
+    }
+    for (int i = 2; i < MAX_NUMERO_BIGLIETTO -1; i++) {
+        numero_biglietto[i] = '0' + rand() % 10;  //genera numeri random nelle poszioni successive dopo le lettere maiuscole
+    }
+
+    numero_biglietto[MAX_NUMERO_BIGLIETTO-1] ='\0';
+    
+    printf("%s\n",numero_biglietto);
+}
+
+void Stampa_Biglietti_Utente(UTENTE user)
+{
+
+    for (int i = 0; i < user.numero_biglietti_acquistati; i++)
+    {
+        printf("-----------------------------------------------\n");
+        printf("Nome: %s\n",user.biglietti_utente[i].nome);
+        printf("Cognome: %s\n",user.biglietti_utente[i].cognome);
+        printf("Classe: %s\n",user.biglietti_utente[i].classe);
+        printf("Numero ticket: %s\n",user.biglietti_utente[i].numero_biglietto);
+        printf("ID Volo: %s\n",user.biglietti_utente[i].volo.Id_Volo);
+
+        printf("Prezzo: %d\n",user.biglietti_utente[i].prezzo);
+        printf("Numero sedile: %d\n",user.biglietti_utente[i].numero_posto);
+        printf("Check-in: %d\n",user.biglietti_utente[i].Check_in);
+    }
+    
+
 }
