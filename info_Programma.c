@@ -1,21 +1,41 @@
-//
-// Created by Perrulli Antonio on 19/04/25.
-//
+/**
+ * @file info_programma.c
+ * @brief Implementazione dei menu e interfaccia del programma FlyTwo.
+ *
+ * Questo file gestisce i menu principali e le schermate interattive del sistema,
+ * per utenti e amministratori. Contiene funzioni che restituiscono una scelta
+ * numerica da parte dell'utente.
+ *
+ * @author Antonio Perrulli e Pietro Menandro
+ * @date 19/04/25
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include "info_Programma.h"
-#define SCENA_DEFAULT 20 
-/*
-	La constante SCENA_DEFAULT viene usata per elimnare il bug del loop causato dal inserimento 
+
+/**
+ * @def SCENA_DEFAULT
+ * 
+ * @brief Macro per soluzione bug input.
+ * 
+ * 	La constante SCENA_DEFAULT viene usata per elimnare il bug del loop causato dal inserimento 
 	di un carattere (come input da tastiera) nella variabile scelta. Questo perche lo scanf già
 	di suo inserisce uno 0 quando riceve come input un carattere. Il problema e causato dal fatto 
 	che il numero 0 negli enum rappresenta un opzione quindi anche se si inserisce un carattere, si
 	effettua comunque una sceelta. Scelta che poi entra in loop per via del '\n' della stringa prima
 	dello scanf e quindi viene valutata come '0' e ricomincia il loop.
+ */
 
-*/
+#define SCENA_DEFAULT 20 
 
+
+ /**
+  * @brief Visualizza il menu principale del programma FlyTwo.
+  *
+  * Consente di scegliere tra pannello utente, amministratore o uscita.
+  * @return Valore intero della scelta effettuata.
+  */
 int Menu_Principale(void) {
 
     int scelta = SCENA_DEFAULT;
@@ -32,13 +52,17 @@ int Menu_Principale(void) {
     return scelta;
 }
 
+/**
+ * @brief Stampa il disegno ASCII di un aeroplano e messaggio di benvenuto.
+ */
 void printAirPlane(void) {
+    printf("\n");
     printf("                             |\n");
     printf("                       --====|====--\n");
     printf("                             |\n");
     printf("                         .-''''''-.\n");
-    printf("                       .'_________'.\n");
-    printf("                      /_/_|__|__|_\\_\\\n");
+    printf("                       .'_________'.         FLYTWO\n");
+    printf("                      /_/_|__|__|_\\_\\        Sistema Voli\n");
     printf("                     ;'-._       _.-';\n");
     printf(",--------------------|    `-. .-'    |--------------------,\n");
     printf(" ``\"\"--..__    ___   ;       '       ;   ___    __..--\"\"``\n");
@@ -46,9 +70,16 @@ void printAirPlane(void) {
     printf("              \\\\_//    '._       _.'    \\\\_//\n");
     printf("               `\"`        ``---``        `\"`\n");
 
-	
+    printf("               Benvenuto nel progetto FlyTwo! \n");
+    printf("------------------------------------------------------------\n\n");
 }
 
+/**
+ * @brief Menu per utenti non autenticati.
+ *
+ * Opzioni: iscrizione, accesso, home, uscita.
+ * @return Intero che rappresenta l'opzione selezionata.
+ */
 int Menu_Pannello_Utente(void){
 
 	int scelta = SCENA_DEFAULT;
@@ -65,6 +96,12 @@ int Menu_Pannello_Utente(void){
 	
 }
 
+/**
+ * @brief Menu per amministratori non autenticati.
+ *
+ * Opzioni: iscrizione, accesso, home, uscita.
+ * @return Valore intero della scelta effettuata.
+ */
 int Menu_Pannello_Amministratore(void){
 
 	
@@ -81,6 +118,12 @@ int Menu_Pannello_Amministratore(void){
 	
 }
 
+/**
+ * @brief Menu home per amministratori autenticati.
+ *
+ * Opzioni: gestione voli, monitoraggio stato, prenotazioni utenti, attivazione account.
+ * @return Intero che rappresenta l’opzione scelta.
+ */
 int Menu_Home_Amministratore(void) {
 
 	int scelta = SCENA_DEFAULT;
@@ -96,6 +139,13 @@ int Menu_Home_Amministratore(void) {
 	return scelta;
 }
 
+
+/**
+ * @brief Menu per la gestione del catalogo voli.
+ *
+ * Azioni disponibili: aggiunta, modifica, cancellazione voli.
+ * @return Intero corrispondente alla scelta effettuata.
+ */
 int Menu_Gestione_Catalogo(void) {
 
 	int scelta = SCENA_DEFAULT;
@@ -111,6 +161,12 @@ int Menu_Gestione_Catalogo(void) {
 	return scelta;
 }
 
+/**
+ * @brief Menu home per utenti autenticati.
+ *
+ * Consente di accedere a funzionalità personali e di viaggio.
+ * @return Intero corrispondente all’opzione selezionata.
+ */
 int Menu_Home_Utente(void) {
 	
 	int scelta = SCENA_DEFAULT;
@@ -126,6 +182,14 @@ int Menu_Home_Utente(void) {
 	return scelta;
 }
 
+/**
+ * @brief Menu che mostra le operazioni che si possono fare sui biglietti.
+ * 
+ * Le operazioni che consente di fare sono le classiche, cancellazione, acquisto,
+ * acquisto e check-in di un biglietto.
+ * 
+ * @return Un intero che rappresenta la scelta selezionata
+ */
 int Menu_Gestione_Biglietti(void)
 {
 	int scelta = SCENA_DEFAULT;

@@ -4,6 +4,9 @@
         "scena_menager.h": "c",
         "info_programma.h": "c",
         "data_set.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "numbers": "c",
+        "random": "c",
+        "stdbool.h": "c"
     }
 }
