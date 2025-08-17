@@ -424,7 +424,7 @@ UTENTE Scena_Gestione_Biglietti(UTENTE user)
 
 
 		case Check_In:
-			printf("Chiusura del menù\n");
+			user = Scena_Check_in(utenti_salvati,numero_utenti,user);
 			break;
 		
 		default:
@@ -715,3 +715,59 @@ UTENTE Scena_Cancella_Biglietto(UTENTE user, UTENTE utenti_salvati[],VOLO voli_s
 	return user;		
 }
 
+UTENTE Scena_Check_in(UTENTE utenti[],int numero_utenti, UTENTE utente_log)
+{
+	char Numero_biglietto [MAX_NUMERO_BIGLIETTO];
+	bool Trovato = false;
+	
+	printf("Stampo tutti i biglietti associati all utente.\n");
+	
+	printf("Attenzione per effettuare il Chek_in, verrà richiesto il numero del biglietto\n");
+
+		Stampa_Biglietti_Utente(utente_log);
+
+		fflush(stdin);
+
+		printf("Inserisci il numero del biglietto sul quale si vuole effetturare il check-in\n");
+		fflush(stdin);
+
+		scanf("%s",Numero_biglietto);
+
+		for (int i = 0; i < utente_log.numero_biglietti_acquistati; i++)
+		{
+			if (strcmp(utente_log.biglietti_utente[i].numero_biglietto,Numero_biglietto) == 0)
+			{
+				printf("Il biglietto è stato trovato, effettuo il check-in");
+				utente_log.biglietti_utente[i].Check_in = true;
+				Trovato = true;
+			}
+			
+		}
+		
+		(Trovato == false? printf("Il numero del biglietto è errato\n"): printf("\n"));
+
+			
+			if (Trovato == true)
+			{
+			for (int i = 0; i < numero_utenti; i++)
+			{
+				if(strcmp(utenti[i].numero_documeto,utente_log.numero_documeto) == 0)
+				{
+					utenti[i] = utente_log;
+				}
+			}
+
+			printf("Il check-in è stato effettuato correttamente\n");
+
+			Aggiorna_File(&utenti[0],&utenti[numero_utenti],FILE_NAME_USER);
+
+			}
+			else
+			{
+				printf("Il numero del biglietto è errato\n");
+			}
+			
+			return utente_log;
+			
+}
+		
