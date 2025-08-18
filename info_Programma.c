@@ -129,7 +129,7 @@ int Menu_Home_Amministratore(void) {
 	int scelta = SCENA_DEFAULT;
 	printf("--------MENU HOME AMMINISTRATORE----------\n");
 	printf("Premi 0: per Gestione catalogo voli\n");
-	printf("Premi 1: per Monitorare e modificare stato voli\n");
+	printf("Premi 1: per Controllare stato voli\n");
 	printf("Premi 2: per Lista Prenotazioni Utenti\n");
 	printf("Premi 3: per Attivare un account amministratore\n");
 	printf("Premi 4: uscire\n");

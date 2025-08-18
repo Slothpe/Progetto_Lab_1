@@ -25,6 +25,7 @@
 
 int main(void)
 {   
+
     PROGRAMMA programma;
     programma.stato_programma = true;
     programma.scena = SCENA_DEFAULT;

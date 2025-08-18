@@ -310,7 +310,7 @@ void Scelta_Classe_Preferita(char classe[])
     int scelta = 0;
     char* preferenza_utente = NULL; //Contiene la preferenza scelta dal utente
     bool scelta_corretta = false; //e falso finche l'utente non fa una scelta corretta
-    char* opzioni_classe [3] = {"Prima Classe","Business","Economy"}; //scelte effetuabili dal utente
+    char* opzioni_classe [3] = {PRIMA_CLASSE,BUSSINES,ECONOMY}; //scelte effetuabili dal utente
 
     printf("Inserisci una preferenza sulla classe:\n");
     while (scelta_corretta == false)
@@ -852,7 +852,6 @@ void Stampa_Voli(VOLO voli[])
         printf("Destinazione: %s\n",voli[i].destinazione);
         printf("Data: %d.%d.%d\n",voli[i].data.giorno,voli[i].data.mese,voli[i].data.anno);
         printf("Ora: %d:%d\n",voli[i].data.ora,voli[i].data.minuti);
-        //printf("Id Aereomobile: %s\n",voli[i].Id_Aereomobile);
         printf("Id volo: %s\n",voli[i].Id_Volo);
         printf("Messaggio: %s\n",voli[i].messaggio);
         printf("Posti business: %d\n",voli[i].posti_business);
@@ -1117,6 +1116,8 @@ void Trova_Volo(void)
                  
             }    
         }
+
+
     } while (trovato == false);
 
     (trovato == true ? printf("\n") : printf("Nessun volo trovato, modifica le date o la destinazione\n"));

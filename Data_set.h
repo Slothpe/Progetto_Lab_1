@@ -23,6 +23,9 @@
 #define MAX_ID 10
 #define NUMERO_PERSONALE 4
 #define MAX_NUMERO_BIGLIETTO 12
+#define PRIMA_CLASSE "Prima Classe"
+#define BUSSINES "Bussines"
+#define ECONOMY "Economy"
 
 /**
 * @brief Rappresenta un ruolo per l'equipaggio del volo

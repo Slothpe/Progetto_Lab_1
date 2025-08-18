@@ -93,3 +93,5 @@ void Scena_Iscrizione_Amministratore(void);
 bool Scena_Accesso_Amministratore(PROGRAMMA*);
 void Scena_Home_Amministratore(PROGRAMMA*);
 void Scena_Gestione_Catalogo(void);
+void Scena_Controllo_Voli(void);
+void Scena_Stato_Prenotazioni_Utenti(VOLO [], int);
