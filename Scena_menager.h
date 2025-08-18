@@ -85,6 +85,7 @@ UTENTE Scena_Gestione_Biglietti(UTENTE);
 UTENTE Scena_Acquista_Biglietto(UTENTE);
 UTENTE Scena_Cancella_Biglietto(UTENTE, UTENTE [], VOLO [], int,int);
 UTENTE Scena_Check_in(UTENTE [],int, UTENTE);
+UTENTE Scena_Modifica_Biglietto(UTENTE[], int, UTENTE, VOLO [], int);
 
 //SCENE AMMINISTRATORE
 void Scena_Pannello_Amministratore(PROGRAMMA*);

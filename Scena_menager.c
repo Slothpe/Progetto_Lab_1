@@ -405,6 +405,12 @@ UTENTE Scena_Gestione_Biglietti(UTENTE user)
 		switch (scena)
 		{
 
+		case Modifica_Biglietto:
+		user = Scena_Modifica_Biglietto(utenti_salvati,numero_utenti,user,voli_salvati,numero_voli);
+
+		break;
+
+
 		case Indietro_Biglietto:
 			printf("Chiusura del menù\n");
 			break;
@@ -771,3 +777,153 @@ UTENTE Scena_Check_in(UTENTE utenti[],int numero_utenti, UTENTE utente_log)
 			
 }
 		
+UTENTE Scena_Modifica_Biglietto(UTENTE utenti[], int numero_utenti, UTENTE utente_log, VOLO voli[], int numero_voli)
+{
+	int scelta = SCENA_DEFAULT;
+	int numero_posto = 0;
+	char numero_biglietto [MAX_NUMERO_BIGLIETTO];
+	VOLO temp_volo;
+	int classe = 0;
+	bool posto_cambiato = false;
+	bool classe_cambiata = false;
+
+	while(scelta != 0)
+	{
+		printf("Inserisci 0 per uscire\n");
+		printf("Inserisci 1 per cambiare il numero del sedile\n");
+		printf("Inserisci 2 per cambiare la classe\n");
+
+		fflush(stdin);
+
+		scanf("%d",&scelta);
+
+		if (scelta == 0)
+		{
+			printf("Chiusura del menù\n");
+		}else
+		{
+
+			printf("Per poter effettuare delle modifiche, bisogna inserire il numero del biglietto\n");
+			printf("Stampo i biglietti associati all utente\n");
+
+			Stampa_Biglietti_Utente(utente_log);
+			fflush(stdin);
+
+			scanf("%s",numero_biglietto);
+
+			for (int  i = 0; i < utente_log.numero_biglietti_acquistati; i++)
+			{
+				if (strcmp(numero_biglietto,utente_log.biglietti_utente[i].numero_biglietto) == 0)
+				{
+					//temp_volo = utente_log.biglietti_utente[i].volo;
+					switch (scelta)
+					{
+					case 1:
+						
+							do
+							{
+							printf("Inserisci il numero del sedile (compreso tra 0 e 99)\n");
+							fflush(stdin);
+
+							scanf("%d",&numero_posto);
+
+							if (numero_posto >= 0 && numero_posto < 100)
+							{
+							
+								if (temp_volo.posti_disponibili[numero_posto] == false)
+								{
+									utente_log.biglietti_utente[i].volo.posti_disponibili[utente_log.biglietti_utente[i].numero_posto] = false;
+									utente_log.biglietti_utente[i].volo.posti_disponibili[numero_posto] = true;
+									utente_log.biglietti_utente[i].numero_posto = numero_posto;
+
+									printf("%d\n",utente_log.biglietti_utente[i].numero_posto);
+
+									posto_cambiato = true;
+								}
+
+							}else
+							{
+								printf("Il numero del sedile è inesistente\n");
+							}
+							} while (posto_cambiato != true);
+						
+						break;
+
+						case 2:
+
+						do
+						{
+							printf("Inserisci 1 per la Prima Classe\n");
+							printf("Inserisci 2 per la Business\n");
+							printf("Inserisci 3 per l' Economy\n");
+
+							fflush(stdin);
+
+							scanf("%d",&classe);
+
+							switch (classe)
+							{
+							case 1:
+								
+								strcpy(utente_log.biglietti_utente[i].classe,"Prima Classe");
+								classe_cambiata = true;
+								break;
+							
+							case 2:
+								
+								strcpy(utente_log.biglietti_utente[i].classe,"business");
+								classe_cambiata = true;
+								break;
+
+							case 3:
+								
+								strcpy(utente_log.biglietti_utente[i].classe,"Economy");
+								classe_cambiata = true;
+								break;
+
+							default:
+								break;
+							}
+
+						} while (classe_cambiata != true);
+						
+
+
+						break;
+					
+					default:
+						break;
+					}
+
+					temp_volo = utente_log.biglietti_utente[i].volo;
+				}
+				
+			}
+			
+			
+		}
+		
+	}
+
+	for (int i = 0; i < numero_utenti; i++)
+	{
+		if(strcmp(utente_log.numero_documeto, utenti[i].numero_documeto) == 0)
+		{
+			utenti[i] = utente_log;
+		}
+	}
+	
+	for (int i = 0; i < numero_voli; i++)
+	{
+		if (strcmp(temp_volo.Id_Volo,voli[i].Id_Volo) == 0)
+		{
+			voli[i] = temp_volo;
+		}
+		
+	}
+	Aggiorna_File(&utenti[0],&utenti[numero_utenti],FILE_NAME_USER);
+	Aggiorna_File(&voli[0],&voli[numero_voli],FILE_NAME_FLY);
+
+	return utente_log;
+	
+}
