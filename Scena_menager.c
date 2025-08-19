@@ -193,7 +193,7 @@ bool Scena_Accesso_Amministratore(PROGRAMMA* programma){
 
 void Scena_Home_Amministratore(PROGRAMMA* programma) {
 
-	int scelta = 0 ;
+	int scelta = SCENA_DEFAULT ;
 	PROGRAMMA temp = *programma;
 
 	FILE* ptr_file = fopen(FILE_NAME_FLY,"rb");
@@ -210,7 +210,7 @@ void Scena_Home_Amministratore(PROGRAMMA* programma) {
 	do{
 		if (temp.admin.account_sbloccato == false) {
 			printf("Il tuo account ancora non è stato accetato, (attendi che un tuo superiore lo faccia)\n");
-			scelta = 0;
+			scelta = 5;
 		}else {
 			scelta = Menu_Home_Amministratore();
 			switch (scelta) {
@@ -229,21 +229,24 @@ void Scena_Home_Amministratore(PROGRAMMA* programma) {
 					break;
 
 				case Prenotazioni_Utenti:
-					/*
-					 *1) Vedere le prenotazioni del utente (ricerca per data, ora e stato)
-					 *	Stati Biglietto: Confermato, in attesa, cancellato
-					 *
-					 */
 
 					 Scena_Stato_Prenotazioni_Utenti(volo_salvati,numero_voli);
 					break;
+
+
+				case Gestione_Notifiche_Voli:
+
+					Scena_Gestione_Notifiche_Voli();
+
+					break;
+
 				default:
 					printf("Scelta Sbagliata\n");
 					break;
 			}
 		}
 		
-	}while (scelta != 4);
+	}while (scelta != 5);
 }
 
 void Scena_Gestione_Catalogo(void){
@@ -1170,4 +1173,204 @@ void Scena_Stato_Prenotazioni_Utenti(VOLO voli_salvati[], int numero_voli)
 	} while (scelta!= 0);
 	
 	fclose(ptr_file);
+}
+
+void Scena_Gestione_Notifiche_Voli(void)
+{
+	int numero_notifiche = Conta_Elementi(FILE_NAME_NOTIFICHE);
+
+	numero_notifiche = (numero_notifiche == 0? 1 : numero_notifiche);
+
+	int scelta = SCENA_DEFAULT;
+
+	FILE* ptr_file = fopen(FILE_NAME_NOTIFICHE,"rb");
+	
+	int numero_notifiche_aggiornato = 0;
+	int indice = 0;	
+
+	NOTIFICA notifiche_salvate[numero_notifiche];
+		
+	while (fread(&notifiche_salvate[indice],sizeof(NOTIFICA),1,ptr_file)!= 0)
+	{
+		indice ++;
+	}
+	
+	NOTIFICA nuova_notifica;
+	
+	indice = 0;
+
+	fclose(ptr_file);
+
+	ptr_file = fopen(FILE_NAME_FLY,"rb");
+	int numero_voli = Conta_Elementi(FILE_NAME_FLY);
+	VOLO voli_salvati[numero_voli];
+	VOLO temp;
+	char id_volo [MAX_ID];
+	bool volo_trovato = false;
+
+	while (fread(&voli_salvati[indice],sizeof(VOLO),1,ptr_file)!= 0)
+	{
+		indice ++;
+	}
+	indice = 0;
+
+	fclose(ptr_file);
+
+
+
+	do
+	{
+		numero_notifiche_aggiornato = Conta_Elementi(FILE_NAME_NOTIFICHE);
+		printf("----------------------------------------------\n");
+		printf("Premi 0: per uscire\n");
+		printf("Premi 1: per vedere tutte le notifiche\n");
+		printf("Premi 2: per vedere le notifiche associate ad un volo\n");
+		printf("Premi 3: per aggiungere una notifica ad un volo\n");
+
+		fflush(stdin);
+
+		scanf("%d",&scelta);
+
+		switch (scelta)
+		{
+		case 0:
+			printf("Chiusurà del menù\n");
+			break;
+
+		case 1:
+
+			if(numero_notifiche_aggiornato != 0)
+			{
+				numero_notifiche = Conta_Elementi(FILE_NAME_NOTIFICHE);
+				for (int i = 0; i < numero_notifiche; i++)
+				{
+					printf("----------------------------------\n");
+					printf("Volo: %s -> %s\n",notifiche_salvate[i].volo_associato.partenza_origine,notifiche_salvate[i].volo_associato.destinazione);
+					printf("Id del volo: %s\n",notifiche_salvate[i].volo_associato.Id_Volo);
+					printf("Stato: %s\n",notifiche_salvate[i].volo_associato.messaggio);
+					printf("Messaggio: %s\n",notifiche_salvate[i].messaggio);
+					printf("----------------------------------\n");
+				}
+			}else
+			{
+				printf("Non ci sono notifiche\n");
+			}
+			
+			break;
+
+		case 2:
+				volo_trovato = false;
+				if(numero_notifiche_aggiornato != 0)
+					{
+					numero_notifiche = Conta_Elementi(FILE_NAME_NOTIFICHE);
+					printf("Stampo tutti i voli esistenti\n");
+
+					Stampa_Voli(voli_salvati);
+					
+					do
+					{
+					
+					printf("Per poter selezionare un volo, inserisci il suo id: ");
+					scanf("%s",id_volo);
+					puts(" ");
+
+					for (int i = 0; i < numero_voli; i++)
+					{
+						if (strcmp(voli_salvati[i].Id_Volo,id_volo) == 0)
+						{
+							temp = voli_salvati[i];
+							volo_trovato = true;
+						}
+						
+					}
+					
+					}while(volo_trovato != true);
+
+					for (int i = 0; i < numero_notifiche; i++)
+					{
+						if (strcmp(notifiche_salvate[i].volo_associato.Id_Volo,temp.Id_Volo) == 0)
+						{
+							printf("----------------------------------\n");
+							printf("Volo: %s -> %s\n",notifiche_salvate[i].volo_associato.partenza_origine,notifiche_salvate[i].volo_associato.destinazione);
+							printf("Id del volo: %s\n",notifiche_salvate[i].volo_associato.Id_Volo);
+							printf("Stato: %s\n",notifiche_salvate[i].volo_associato.messaggio);
+							printf("Messaggio: %s\n",notifiche_salvate[i].messaggio);
+							printf("----------------------------------\n");
+						}
+						
+					}
+				}else
+				{
+					printf("Non ci sono notifiche\n");
+				}
+				
+			break;
+		
+
+		case 3:
+
+				//Aggiungi notifica al volo
+					volo_trovato = false;
+
+					printf("Stampo tutti i voli esistenti\n");
+
+					Stampa_Voli(voli_salvati);
+					
+					do
+					{
+					
+					printf("Per poter selezionare un volo, inserisci il suo id: ");
+					scanf("%s",id_volo);
+					puts(" ");
+
+					for (int i = 0; i < numero_voli; i++)
+					{
+						if (strcmp(voli_salvati[i].Id_Volo,id_volo) == 0)
+						{
+							temp = voli_salvati[i];
+							volo_trovato = true;
+						}
+						
+					}
+					
+					}while(volo_trovato != true);
+
+					nuova_notifica.volo_associato = temp;
+
+					printf("Inserisci la notifica da associare al volo (MAX 348 caratteri)\n");
+					fflush(stdin);
+
+					fgets(nuova_notifica.messaggio,sizeof(nuova_notifica.messaggio),stdin);
+
+					nuova_notifica.messaggio[MAX_NOTIFICA-1] = '\0';
+					Salva_Notifica(nuova_notifica);
+
+		 	break;
+
+
+		default:
+			break;
+		}
+	} while (scelta!= 0);
+
+	/*
+	Adesso bisgona aggiungere l'opzione che serve per poter cancellare un notifica. Domanda:
+
+	1) una notifica la posso cancellare se la identifico in qualche modo rispetto a gli altri.
+	per fare cio posso associare un numero alla notifica e quindi riconoscerla.
+
+	2) Posso mettere l'opzione di cancellare tutte le notifiche associate ad un volo.
+	per fare cio posso sfruttare la voce volo_associato e riconoscere tutte le notifiche associate a quel volo
+
+	3) Ancora non ho la più pallida idea.
+
+	4) Secondo me devo modificare la struttura notifica. Posso aggiungere un booleano che ci consente di determinare se
+	quella notifica deve essere visualizzabile anche agli utenti o solo agli amministratori..............
+
+	tipo se bool == true allora è visualizzabile a tutti !
+	se bool == false allora è visualizzabile solo agli utenti !
+	
+	
+	*/
+
 }

@@ -228,6 +228,9 @@ int Conta_Elementi(char* stringa) {
     }else if(strcmp(stringa,FILE_NAME_USER) == 0) {
 
         utenti_iscritti = size / sizeof(UTENTE);
+    }else if(strcmp(stringa,FILE_NAME_NOTIFICHE) == 0)
+    {
+        utenti_iscritti = size / sizeof(NOTIFICA);
     }
 
 

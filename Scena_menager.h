@@ -40,6 +40,7 @@ typedef enum{
 	Controllo_Voli,
 	Prenotazioni_Utenti,
 	Attivazione_Account,
+	Gestione_Notifiche_Voli,
 
 
 }HOME_AMMINISTRATORE;
@@ -97,3 +98,4 @@ void Scena_Home_Amministratore(PROGRAMMA*);
 void Scena_Gestione_Catalogo(void);
 void Scena_Controllo_Voli(void);
 void Scena_Stato_Prenotazioni_Utenti(VOLO [], int);
+void Scena_Gestione_Notifiche_Voli(void);

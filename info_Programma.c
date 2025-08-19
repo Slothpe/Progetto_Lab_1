@@ -132,7 +132,8 @@ int Menu_Home_Amministratore(void) {
 	printf("Premi 1: per Controllare stato voli\n");
 	printf("Premi 2: per Lista Prenotazioni Utenti\n");
 	printf("Premi 3: per Attivare un account amministratore\n");
-	printf("Premi 4: uscire\n");
+	printf("Premi 4: per Gestire le Notifiche dei voli\n");
+	printf("Premi 5: uscire\n");
 
 	fflush(stdin);
 	scanf("%d",&scelta);
