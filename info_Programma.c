@@ -175,7 +175,6 @@ int Menu_Home_Utente(void) {
 	printf("Premi 0: Torna indietro\n");
 	printf("Premi 1: Gestire i biglietti\n"); //Acquista biglietto
 	printf("Premi 2: Gestire le segnalazioni\n");
-	printf("Premi 3: Gestire il profilo\n");
 
 	fflush(stdin);
 	scanf("%d", &scelta);
@@ -199,7 +198,8 @@ int Menu_Gestione_Biglietti(void)
 	printf("Premi 1: Modificare i biglietti\n"); //Acquista biglietto
 	printf("Premi 2: Cancellare i biglietti\n");
 	printf("Premi 3: Acquistare i biglietti\n");
-	printf("Premi 4: Check_In\n");
+	printf("Premi 4: Per visualizzare tutte le prenotazioni\n");
+	printf("Premi 5: Check_In\n");
 
 	fflush(stdin);
 	scanf("%d", &scelta);

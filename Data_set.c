@@ -869,13 +869,14 @@ void Stampa_Voli(VOLO voli[])
     }
 }
 
-void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli)
+void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli, UTENTE utenti_salvati[], int numero_utenti)
 {
     int Stato = 0;
     int Posizione = 0;
     bool Trovato = false;
     FILE *Ptr_file = fopen(FILE_NAME_PERSONALE,"rb");
     int  Numero_Personale = Conta_Elementi(FILE_NAME_PERSONALE);
+    NOTIFICA notifica;
 
     PERSONALE_VOLO Personale[Numero_Personale];
     int indice = 0;
@@ -894,6 +895,7 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli)
             printf("Volo trovato\n");
             Posizione = i;
             Trovato = true;
+            
         }
     }
 
@@ -921,16 +923,24 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli)
         {
         case 1:
                 Inserisci_Luogo_Partenza(Voli_Salvati[Posizione].partenza_origine);
+                strcpy(notifica.messaggio,"E' stato cambiato il luogo di partenza del volo\n");
+                notifica.volo_associato = Voli_Salvati[Posizione];
             break;
 
         case 2:
            
                 Inserisci_Luogo_Destinazione(Voli_Salvati[Posizione].destinazione);
+                strcpy(notifica.messaggio,"E' stato cambiato il luogo di arrivo del volo\n");
+                notifica.volo_associato = Voli_Salvati[Posizione];
+                
             break;
 
          case 3:
            
                 Voli_Salvati[Posizione].data = Inserisci_Data_Volo();
+                strcpy(notifica.messaggio,"E' stato cambiata la data del volo");
+                notifica.volo_associato = Voli_Salvati[Posizione];
+                
             break;
 
          case 4:
@@ -966,6 +976,9 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli)
                 printf("Inserisci il numero dei posti Business\n");
                 fflush(stdin);
                 scanf("%d",&Voli_Salvati[Posizione].posti_business);
+                strcpy(notifica.messaggio,"E' stato cambiato il numero di posti in Business\n");
+                notifica.volo_associato = Voli_Salvati[Posizione];
+                
            
             break;
 
@@ -974,6 +987,9 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli)
                 printf("Inserisci il numero dei posti economy\n");
                 fflush(stdin);
                 scanf("%d",&Voli_Salvati[Posizione].posti_economy);
+                strcpy(notifica.messaggio,"E' stato cambiato il numero di posti in economy\n");
+                notifica.volo_associato = Voli_Salvati[Posizione];
+                
 
             break;
 
@@ -982,6 +998,8 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli)
                 printf("Inserisci il numero dei posti Prima classe\n");
                 fflush(stdin);
                 scanf("%d",&Voli_Salvati[Posizione].posti_prima_classe);
+                strcpy(notifica.messaggio,"E' stato cambiato il numero di posti in prima classe\n");
+                notifica.volo_associato = Voli_Salvati[Posizione];
 
             break;
 
@@ -1005,6 +1023,7 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli)
                     {
                         printf("Scelta non disponibile\n");
                     }
+                    notifica.volo_associato = Voli_Salvati[Posizione];
                     
             break;
         
@@ -1031,6 +1050,9 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli)
                     Voli_Salvati[Posizione] = Associa_Personale_volo(Voli_Salvati[Posizione]);
 
                     Salva_volo(Voli_Salvati[Posizione]);
+
+                    strcpy(notifica.messaggio,"E' stato cambiato il personale associato al volo\n");
+                    notifica.volo_associato = Voli_Salvati[Posizione];
                     
                     
             break;
@@ -1047,8 +1069,26 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli)
 
         if(scelta >= 1 && scelta < 10)
         {
+        
+            for (int i = 0; i < numero_utenti; i++)
+            {
+                for (int j = 0; j < utenti_salvati[i].numero_biglietti_acquistati; j++)
+                {
+                    if (strcmp(Voli_Salvati[Posizione].Id_Volo,utenti_salvati[i].biglietti_utente[j].volo.Id_Volo) == 0)
+                    {
+                        utenti_salvati[i].biglietti_utente[j].volo = Voli_Salvati[Posizione];
+                    }
+                    
+                }
+                
+            }
             
+        //e poi devo trovare
+        //un modo per stampare le notifiche
         Aggiorna_File(&Voli_Salvati[0],&Voli_Salvati[Numero_Voli],FILE_NAME_FLY);
+        Aggiorna_File(&utenti_salvati[0],&utenti_salvati[numero_utenti],FILE_NAME_USER);
+        Salva_Notifica(notifica);
+
         }
 
     }while(scelta != 10);
@@ -1151,11 +1191,24 @@ void Stampa_Biglietti_Utente(UTENTE user)
         printf("Classe: %s\n",user.biglietti_utente[i].classe);
         printf("Numero ticket: %s\n",user.biglietti_utente[i].numero_biglietto);
         printf("ID Volo: %s\n",user.biglietti_utente[i].volo.Id_Volo);
-
-        printf("Prezzo: %d\n",user.biglietti_utente[i].prezzo);
+        printf("Tratta: %s -> %s\n",user.biglietti_utente[i].volo.partenza_origine,user.biglietti_utente[i].volo.destinazione);
+        printf("Orario: %d:%d\n",user.biglietti_utente[i].volo.data.ora,user.biglietti_utente[i].volo.data.minuti);
+        printf("Data: %d.%d.%d\n",user.biglietti_utente[i].volo.data.giorno, user.biglietti_utente[i].volo.data.mese, user.biglietti_utente[i].volo.data.anno);
+        printf("Prezzo: %d$\n",user.biglietti_utente[i].prezzo);
         printf("Numero sedile: %d\n",user.biglietti_utente[i].numero_posto);
         printf("Check-in: %d\n",user.biglietti_utente[i].Check_in);
     }
     
+
+}
+
+void Salva_Notifica(NOTIFICA notifica)
+{
+    NOTIFICA notifica_da_salvare = notifica;
+    FILE* ptr_file = fopen(FILE_NAME_NOTIFICHE,"ab");
+
+    fwrite(&notifica_da_salvare,sizeof(NOTIFICA),1,ptr_file);
+
+    fclose(ptr_file);
 
 }

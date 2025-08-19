@@ -69,6 +69,7 @@ typedef enum{
 	Modifica_Biglietto,
 	Canecella_Biglietto,
 	Acquista_Biglietto,
+	Visualizza_Prenotazioni,
 	Check_In,
 
 }GESTIONE_PRENOTAZIONI;
@@ -86,6 +87,7 @@ UTENTE Scena_Acquista_Biglietto(UTENTE);
 UTENTE Scena_Cancella_Biglietto(UTENTE, UTENTE [], VOLO [], int,int);
 UTENTE Scena_Check_in(UTENTE [],int, UTENTE);
 UTENTE Scena_Modifica_Biglietto(UTENTE[], int, UTENTE, VOLO [], int);
+void Scena__Gestisci_Segnalazioni(void);
 
 //SCENE AMMINISTRATORE
 void Scena_Pannello_Amministratore(PROGRAMMA*);

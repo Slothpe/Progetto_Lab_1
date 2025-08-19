@@ -256,6 +256,10 @@ void Scena_Gestione_Catalogo(void){
 	int indice = 0;
 	VOLO temp;
 
+	FILE* ptr_user = fopen(FILE_NAME_USER,"rb");
+	int numero_utenti = Conta_Elementi(FILE_NAME_USER);
+	UTENTE utenti_salvati [numero_utenti];
+
 
 	//devo salvare i voli nel array voli_salvati
 	while (fread(&Voli_Salvati[indice],sizeof(VOLO),1,ptr_file))
@@ -263,6 +267,15 @@ void Scena_Gestione_Catalogo(void){
 		indice ++;
 	}
 	fclose(ptr_file);
+
+	indice = 0;
+
+	while (fread(&utenti_salvati[indice],sizeof(UTENTE),1,ptr_user))
+	{
+		indice ++;
+	}
+
+	fclose(ptr_user);
 
 	indice = 0;
 
@@ -291,7 +304,8 @@ void Scena_Gestione_Catalogo(void){
 			printf("Inserisci l'id del volo da modificare; ");
 			scanf("%s",Id_input);
 
-			Cambia_Volo(Id_input,Voli_Salvati,Numero_voli);
+			Cambia_Volo(Id_input,Voli_Salvati,Numero_voli,utenti_salvati,numero_utenti);
+			
 		
 
 		break;
@@ -317,7 +331,6 @@ void Scena_Gestione_Catalogo(void){
 
 			Aggiorna_File(&Lista_Aggiornata[0],&Lista_Aggiornata[indice],FILE_NAME_FLY);
 			printf("Volo Cancellato\n");
-			
 		
 		
 		break;
@@ -438,6 +451,12 @@ UTENTE Scena_Gestione_Biglietti(UTENTE user)
 			break;
 		
 
+		case Visualizza_Prenotazioni:
+
+			printf("Stampo tutti i biglietti associati al utente\n");
+			Stampa_Biglietti_Utente(user);	
+
+			break;
 
 		case Check_In:
 			user = Scena_Check_in(utenti_salvati,numero_utenti,user);
@@ -463,6 +482,7 @@ UTENTE Scena_Acquista_Biglietto(UTENTE user)
 	FILE *ptr_file = fopen(FILE_NAME_FLY,"rb");
 	FILE *ptr_file2 = fopen(FILE_NAME_USER,"rb");
 	int indice = 0;
+	
 
 
 	//Associazione al array gli utenti salvati nel file
@@ -490,7 +510,10 @@ UTENTE Scena_Acquista_Biglietto(UTENTE user)
 	int classe = SCENA_DEFAULT;
 	ticket.Check_in = false;
 	bool associato = false;
+	char numero_carta [NUMERO_CARTA];
+	bool carta_verficata = false;
 
+	indice = 0;
 	
 	Trova_Volo();
 
@@ -614,6 +637,7 @@ UTENTE Scena_Acquista_Biglietto(UTENTE user)
 								user.biglietti_utente[user.numero_biglietti_acquistati] = ticket;
 								user.numero_biglietti_acquistati ++;
 								
+								
 								for (int i = 0; i < numero_utenti; i++)
 								{
 									if (strcmp(utenti[i].numero_documeto, user.numero_documeto) == 0)
@@ -622,6 +646,51 @@ UTENTE Scena_Acquista_Biglietto(UTENTE user)
 									}
 									
 								}
+
+								do
+								{
+									printf("Inserisci il numero della carta di credito: ");
+									scanf("%s",numero_carta);
+									
+									if (strlen(numero_carta) == NUMERO_CARTA)
+									{
+										/* code */
+									
+									
+									for (int i = 0; i < NUMERO_CARTA-1; i++)
+									{
+										for (int j = '0'; j <= '9'; j++)
+										{
+											if (numero_carta[i] == j)
+											{
+												indice ++;
+											}
+											
+										}
+										
+										
+									}
+									
+									if (indice == NUMERO_CARTA-1)
+									{
+										carta_verficata = true;
+										printf("La carta inserita è corretta, effettuo il pagamento\n");
+									}else
+									{
+										printf("Il numero della carta non è corretto riprova\n");
+										indice = 0;
+									}
+								}else
+								{
+									printf("Il numero della carta non corrisponde agli standard (16 cifre)\n");
+								}
+									
+
+
+								} while (carta_verficata != true);
+								
+								
+								printf("Biglietto Acquistato\n");
 								
 							}
 							

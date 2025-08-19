@@ -14,6 +14,7 @@
 #define FILE_NAME_USER "Data_User.bin"
 #define FILE_NAME_ADMIN "Data_Admin.bin"
 #define FILE_NAME_FLY "Data_Fly.bin"
+#define FILE_NAME_NOTIFICHE "Notifiche_Voli.bin"
 #define MAX_PASSEGERI 100
 #define MAX_BIGLIETTI_UTENTE 10
 #define MAX_PASSWORD 20 //Numero massimo di caratteri per la password
@@ -26,6 +27,8 @@
 #define PRIMA_CLASSE "Prima Classe"
 #define BUSSINES "Bussines"
 #define ECONOMY "Economy"
+#define NUMERO_CARTA 16
+#define MAX_NOTIFICA 350
 
 /**
 * @brief Rappresenta un ruolo per l'equipaggio del volo
@@ -80,6 +83,17 @@ typedef struct    //struttura per i dati del volo
 	PERSONALE_VOLO personale[NUMERO_PERSONALE];
 }VOLO;
 
+/**
+* @brief Rappresenta il sistema di notifica del volo
+* Contiene il massimo di caratteri del messaggio (500), il tipo di messaggio, se riguarda il ritardo
+* o la cancellazione del volo
+*/
+typedef struct 
+{
+    char messaggio [MAX_NOTIFICA];
+    VOLO volo_associato;
+    
+} NOTIFICA;
 
 /**
 * @brief Rappresenta i dati del biglietto
@@ -121,18 +135,6 @@ typedef struct   //struttura per inserire dati passeggeri
 	char segnalazioni[5][500]; // Ogni utente può inviare massimo 5 segnalazioni
 	int num_segnalazioni; // Conta il numero di segnalazioni inviate
 }UTENTE;
-
-/**
-* @brief Rappresenta il sistema di notifica del volo
-* Contiene il massimo di caratteri del messaggio (500), il tipo di messaggio, se riguarda il ritardo
-* o la cancellazione del volo
-*/
-typedef struct   //struttura per le notifiche del volo
-{
-    char messaggio[500];   //massimo di caratteri che può contenere un messaggio
-    char tipo[MAX_STRINGHE];   //ritardi, cambio di orario
-    VOLO volo_interessato;
-} NOTIFICA;
 
 /**
 * @brief Rappresenta i dati anagrafici e informazioni per accedere al profilo dell'amministratore
@@ -418,7 +420,7 @@ void Stampa_Voli(VOLO []);
  * @param voli Array di voli disponibili.
  * @param num_voli Numero totale di voli.
  */
-void Cambia_Volo(char[MAX_ID], VOLO [], int);
+void Cambia_Volo(char[MAX_ID], VOLO [], int, UTENTE [],int);
 
 /**
  * @brief Consente di trovare un volo.
@@ -451,3 +453,5 @@ void Genera_Numero_Biglietto(char [MAX_NUMERO_BIGLIETTO]);
  * @param user Rappresenta l'utente di cui si vuole stmpare i biglietti acquistati
  */
 void Stampa_Biglietti_Utente(UTENTE);
+
+void Salva_Notifica(NOTIFICA);
