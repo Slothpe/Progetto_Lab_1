@@ -92,6 +92,9 @@ typedef struct
 {
     char messaggio [MAX_NOTIFICA];
     VOLO volo_associato;
+    char Numero_Notifica [MAX_ID];
+    bool visualizza; // visualizza = true -> notifica per ogni tipo di utente
+                     // viusalizza = false -> notifica solo per amministratore
     
 } NOTIFICA;
 
@@ -455,3 +458,5 @@ void Genera_Numero_Biglietto(char [MAX_NUMERO_BIGLIETTO]);
 void Stampa_Biglietti_Utente(UTENTE);
 
 void Salva_Notifica(NOTIFICA);
+
+void Genera_Id_Notifica(char []);

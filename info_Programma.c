@@ -88,6 +88,7 @@ int Menu_Pannello_Utente(void){
 	printf("Premi 1: per iscriverti\n");
 	printf("Premi 2: per accedere\n");
 	printf("Premi 3: per accedere alla home\n");
+	printf("Premi 4: per recuperare la password\n");
 	
 	
 	fflush(stdin);

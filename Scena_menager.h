@@ -25,12 +25,13 @@ typedef enum{
 }SCENA_AMMINISTRATORE;
 
 typedef enum {
-    // U = Utente , A = Amministratore P = Programma
+   
 
-    Scena_Chiusura_PU,//0
-    Scena_Iscrzione_U,//1
-    Scena_Accesso_U,//2
-    Scena_Home_U,//3
+    Scena_Chiusura_PU,
+    Scena_Iscrzione_U,
+    Scena_Accesso_U,
+    Scena_Home_U,
+	Password_Dimenticata_U,
 
 }SCENA_UTENTE;
 
@@ -60,7 +61,6 @@ typedef enum {
 	Esci_U, //chiusura home utente
 	Gestisci_Biglietti,
 	Gestisci_segnalazioni,
-	Gestisci_Profilo,
 
 }HOME_UTENTE;
 
@@ -88,7 +88,8 @@ UTENTE Scena_Acquista_Biglietto(UTENTE);
 UTENTE Scena_Cancella_Biglietto(UTENTE, UTENTE [], VOLO [], int,int);
 UTENTE Scena_Check_in(UTENTE [],int, UTENTE);
 UTENTE Scena_Modifica_Biglietto(UTENTE[], int, UTENTE, VOLO [], int);
-void Scena__Gestisci_Segnalazioni(void);
+void Scena__Gestisci_Segnalazioni(UTENTE);
+void Scena_Password_Dimenticata(void);
 
 //SCENE AMMINISTRATORE
 void Scena_Pannello_Amministratore(PROGRAMMA*);
@@ -99,3 +100,4 @@ void Scena_Gestione_Catalogo(void);
 void Scena_Controllo_Voli(void);
 void Scena_Stato_Prenotazioni_Utenti(VOLO [], int);
 void Scena_Gestione_Notifiche_Voli(void);
+void Scena_Attivazione_Account_Amministratore(void);

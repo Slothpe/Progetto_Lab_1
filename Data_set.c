@@ -435,7 +435,7 @@ AMMINISTRATORE Iscrizione_Amministratore(void) {  //funzione per l'iscrizione de
 
     puts("");
     	
-    printf("Inserisci la password (Lunghezza max 19, almeno una lettera Maiuscola e un carattere speciale)\n");
+    printf("Inserisci la password (Lunghezza max 19, almeno una lettera Maiuscola e un carattere speciale = (! # $ / & , ( ) * + ' - ) \n");
     fflush(stdin);
 
     do {
@@ -839,6 +839,37 @@ void Aggiorna_File(void* min, void* max, char* nome_file)
 
         fclose(ptr_file);
     }
+
+     if(strcmp(nome_file,FILE_NAME_NOTIFICHE) == 0)
+    {
+        NOTIFICA* ptr_min = (NOTIFICA*)min;
+        NOTIFICA* ptr_max = (NOTIFICA*)max;
+        FILE* ptr_file = fopen(FILE_NAME_NOTIFICHE,"wb");
+
+        for (;ptr_min < ptr_max; ptr_min++)
+        {
+            fwrite(ptr_min,sizeof(NOTIFICA),1,ptr_file);
+            
+        }
+        
+        fclose(ptr_file);
+    }
+
+      if(strcmp(nome_file,FILE_NAME_ADMIN) == 0)
+    {
+        AMMINISTRATORE* ptr_min = (AMMINISTRATORE*)min;
+        AMMINISTRATORE* ptr_max = (AMMINISTRATORE*)max;
+        FILE* ptr_file = fopen(FILE_NAME_ADMIN,"wb");
+
+        for (;ptr_min < ptr_max; ptr_min++)
+        {
+            fwrite(ptr_min,sizeof(AMMINISTRATORE),1,ptr_file);
+            
+        }
+        
+        fclose(ptr_file);
+    }
+    
     
 }
 
@@ -928,6 +959,7 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli, UT
                 Inserisci_Luogo_Partenza(Voli_Salvati[Posizione].partenza_origine);
                 strcpy(notifica.messaggio,"E' stato cambiato il luogo di partenza del volo\n");
                 notifica.volo_associato = Voli_Salvati[Posizione];
+                notifica.visualizza = false;
             break;
 
         case 2:
@@ -935,6 +967,7 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli, UT
                 Inserisci_Luogo_Destinazione(Voli_Salvati[Posizione].destinazione);
                 strcpy(notifica.messaggio,"E' stato cambiato il luogo di arrivo del volo\n");
                 notifica.volo_associato = Voli_Salvati[Posizione];
+                notifica.visualizza = false;
                 
             break;
 
@@ -943,6 +976,7 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli, UT
                 Voli_Salvati[Posizione].data = Inserisci_Data_Volo();
                 strcpy(notifica.messaggio,"E' stato cambiata la data del volo");
                 notifica.volo_associato = Voli_Salvati[Posizione];
+                notifica.visualizza = true;
                 
             break;
 
@@ -980,7 +1014,9 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli, UT
                 fflush(stdin);
                 scanf("%d",&Voli_Salvati[Posizione].posti_business);
                 strcpy(notifica.messaggio,"E' stato cambiato il numero di posti in Business\n");
+                notifica.visualizza = false;
                 notifica.volo_associato = Voli_Salvati[Posizione];
+                
                 
            
             break;
@@ -991,7 +1027,9 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli, UT
                 fflush(stdin);
                 scanf("%d",&Voli_Salvati[Posizione].posti_economy);
                 strcpy(notifica.messaggio,"E' stato cambiato il numero di posti in economy\n");
+                notifica.visualizza = false;
                 notifica.volo_associato = Voli_Salvati[Posizione];
+                
                 
 
             break;
@@ -1002,7 +1040,9 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli, UT
                 fflush(stdin);
                 scanf("%d",&Voli_Salvati[Posizione].posti_prima_classe);
                 strcpy(notifica.messaggio,"E' stato cambiato il numero di posti in prima classe\n");
+                notifica.visualizza = false;
                 notifica.volo_associato = Voli_Salvati[Posizione];
+                
 
             break;
 
@@ -1055,6 +1095,7 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli, UT
                     Salva_volo(Voli_Salvati[Posizione]);
 
                     strcpy(notifica.messaggio,"E' stato cambiato il personale associato al volo\n");
+                    notifica.visualizza = false;
                     notifica.volo_associato = Voli_Salvati[Posizione];
                     
                     
@@ -1081,15 +1122,12 @@ void Cambia_Volo(char Id_input[MAX_ID], VOLO Voli_Salvati[], int Numero_Voli, UT
                     {
                         utenti_salvati[i].biglietti_utente[j].volo = Voli_Salvati[Posizione];
                     }
-                    
                 }
-                
             }
             
-        //e poi devo trovare
-        //un modo per stampare le notifiche
         Aggiorna_File(&Voli_Salvati[0],&Voli_Salvati[Numero_Voli],FILE_NAME_FLY);
         Aggiorna_File(&utenti_salvati[0],&utenti_salvati[numero_utenti],FILE_NAME_USER);
+        Genera_Id_Notifica(notifica.Numero_Notifica);
         Salva_Notifica(notifica);
 
         }
@@ -1214,4 +1252,17 @@ void Salva_Notifica(NOTIFICA notifica)
 
     fclose(ptr_file);
 
+}
+
+void Genera_Id_Notifica(char id_notifica[])
+{
+    srand(time(NULL));
+
+    for (int i = 0; i < MAX_ID - 1; i++)
+    {
+        id_notifica[i] = (char) 'A' + rand() % 26;
+    }
+    
+    id_notifica[MAX_ID-1] = '\0';
+    
 }

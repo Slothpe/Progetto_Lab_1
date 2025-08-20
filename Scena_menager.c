@@ -43,6 +43,10 @@ void Scena_Panello_Utente(PROGRAMMA* programma){
 
 			break;
 
+			case Password_Dimenticata_U:
+
+			Scena_Password_Dimenticata();
+
 			default:
 			
 			printf("Scelta sbagliata\n");	
@@ -231,6 +235,7 @@ void Scena_Home_Amministratore(PROGRAMMA* programma) {
 				case Prenotazioni_Utenti:
 
 					 Scena_Stato_Prenotazioni_Utenti(volo_salvati,numero_voli);
+
 					break;
 
 
@@ -239,6 +244,12 @@ void Scena_Home_Amministratore(PROGRAMMA* programma) {
 					Scena_Gestione_Notifiche_Voli();
 
 					break;
+
+				case Attivazione_Account:
+
+					Scena_Attivazione_Account_Amministratore();
+
+				 break;
 
 				default:
 					printf("Scelta Sbagliata\n");
@@ -379,14 +390,10 @@ void Scena_Home_Utente(PROGRAMMA* programma)
 
 			case Gestisci_segnalazioni:
 				
-				
+				Scena__Gestisci_Segnalazioni(temp.utente);
 
 				break;
 			
-			case Gestisci_Profilo:
-				/* code */
-				break;
-
 
 			default:
 				break;
@@ -1177,7 +1184,13 @@ void Scena_Stato_Prenotazioni_Utenti(VOLO voli_salvati[], int numero_voli)
 
 void Scena_Gestione_Notifiche_Voli(void)
 {
+	bool notifica_trovata = false;
+
+	char id_notifica [MAX_ID];
+
 	int numero_notifiche = Conta_Elementi(FILE_NAME_NOTIFICHE);
+
+	int visualizza_notifica = SCENA_DEFAULT;
 
 	numero_notifiche = (numero_notifiche == 0? 1 : numero_notifiche);
 
@@ -1216,6 +1229,8 @@ void Scena_Gestione_Notifiche_Voli(void)
 
 	fclose(ptr_file);
 
+	NOTIFICA lista_notifiche_aggiornate [numero_notifiche - 1];
+	
 
 
 	do
@@ -1226,6 +1241,7 @@ void Scena_Gestione_Notifiche_Voli(void)
 		printf("Premi 1: per vedere tutte le notifiche\n");
 		printf("Premi 2: per vedere le notifiche associate ad un volo\n");
 		printf("Premi 3: per aggiungere una notifica ad un volo\n");
+		printf("Premi 4: per cancellare una notifica\n");
 
 		fflush(stdin);
 
@@ -1248,6 +1264,7 @@ void Scena_Gestione_Notifiche_Voli(void)
 					printf("Volo: %s -> %s\n",notifiche_salvate[i].volo_associato.partenza_origine,notifiche_salvate[i].volo_associato.destinazione);
 					printf("Id del volo: %s\n",notifiche_salvate[i].volo_associato.Id_Volo);
 					printf("Stato: %s\n",notifiche_salvate[i].volo_associato.messaggio);
+					printf("Numero Notifica: %s\n",notifiche_salvate[i].Numero_Notifica);
 					printf("Messaggio: %s\n",notifiche_salvate[i].messaggio);
 					printf("----------------------------------\n");
 				}
@@ -1309,7 +1326,6 @@ void Scena_Gestione_Notifiche_Voli(void)
 
 		case 3:
 
-				//Aggiungi notifica al volo
 					volo_trovato = false;
 
 					printf("Stampo tutti i voli esistenti\n");
@@ -1343,34 +1359,346 @@ void Scena_Gestione_Notifiche_Voli(void)
 					fgets(nuova_notifica.messaggio,sizeof(nuova_notifica.messaggio),stdin);
 
 					nuova_notifica.messaggio[MAX_NOTIFICA-1] = '\0';
+
+					Genera_Id_Notifica(nuova_notifica.Numero_Notifica);
+					
+					do
+					{
+						printf("Premi 0: per rendere la notifica visualizzabile solo agli amministratori\n");
+						printf("Premi 1: per rendere la notifica visualizzabile a tutti\n");
+						fflush( stdin);
+
+						scanf("%d",&visualizza_notifica);
+
+						nuova_notifica.visualizza = (visualizza_notifica == 1? true: false);
+
+					} while (visualizza_notifica != 0 && visualizza_notifica != 1);
+					
+					
 					Salva_Notifica(nuova_notifica);
 
 		 	break;
 
+		case 4:
+
+				indice = 0;
+				volo_trovato = false;
+				if(numero_notifiche_aggiornato != 0)
+					{
+					numero_notifiche = Conta_Elementi(FILE_NAME_NOTIFICHE);
+				for (int i = 0; i < numero_notifiche; i++)
+				{
+					printf("----------------------------------\n");
+					printf("Volo: %s -> %s\n",notifiche_salvate[i].volo_associato.partenza_origine,notifiche_salvate[i].volo_associato.destinazione);
+					printf("Id del volo: %s\n",notifiche_salvate[i].volo_associato.Id_Volo);
+					printf("Stato: %s\n",notifiche_salvate[i].volo_associato.messaggio);
+					printf("Numero Notifica: %s\n",notifiche_salvate[i].Numero_Notifica);
+					printf("Messaggio: %s\n",notifiche_salvate[i].messaggio);
+					printf("----------------------------------\n");
+				}
+					
+				
+					
+					printf("Per poter selezionare una notifica, inserisci il suo id: ");
+					scanf("%s",id_notifica);
+					puts(" ");
+
+					for (int  i = 0; i < numero_notifiche; i++)
+					{
+						if (strcmp(notifiche_salvate[i].Numero_Notifica,id_notifica) == 0)
+						{
+							notifica_trovata = true;
+						}
+						
+					}
+					
+
+					if(notifica_trovata == true)
+					{
+						for (int i = 0; i < numero_notifiche; i++)
+						{
+							if (strcmp(notifiche_salvate[i].Numero_Notifica,id_notifica) != 0)
+							{
+								lista_notifiche_aggiornate[indice] = notifiche_salvate[i];
+								indice ++;
+								
+							}
+							
+							printf("Notifica cancellata\n");
+
+							Aggiorna_File(&lista_notifiche_aggiornate[0],&lista_notifiche_aggiornate[numero_notifiche - 1],FILE_NAME_NOTIFICHE);
+							
+						}
+					}else
+					{
+							printf("ID notifica sbagliato\n");
+					}
+					
+				}else
+				{
+					printf("Non ci sono notifiche da cancellare\n");
+				}
+
+
+			break;
 
 		default:
 			break;
 		}
 	} while (scelta!= 0);
+}
 
-	/*
-	Adesso bisgona aggiungere l'opzione che serve per poter cancellare un notifica. Domanda:
+void Scena__Gestisci_Segnalazioni(UTENTE utente)
+{
+	FILE* ptr_file = fopen(FILE_NAME_NOTIFICHE,"rb");
+	int numero_notifiche = (Conta_Elementi(FILE_NAME_NOTIFICHE) == 0? 1: Conta_Elementi(FILE_NAME_NOTIFICHE));
+	int indice = 0;
+	NOTIFICA lista_notifiche [numero_notifiche];
+	NOTIFICA nuova_notifica;
+	int scelta = SCENA_DEFAULT;
+	char id_biglietto [MAX_NUMERO_BIGLIETTO];
+	bool biglietto_trovato = false;
 
-	1) una notifica la posso cancellare se la identifico in qualche modo rispetto a gli altri.
-	per fare cio posso associare un numero alla notifica e quindi riconoscerla.
+	while (fread(&lista_notifiche[indice],sizeof(NOTIFICA),1,ptr_file)!= 0)
+	{
+		indice ++;
+	}
 
-	2) Posso mettere l'opzione di cancellare tutte le notifiche associate ad un volo.
-	per fare cio posso sfruttare la voce volo_associato e riconoscere tutte le notifiche associate a quel volo
+	indice = 0;
 
-	3) Ancora non ho la più pallida idea.
+	fclose(ptr_file);
+	
+	do
+	{
+		printf("--------------------------------------------------------------\n");
+		printf("Premi 0 per: Uscire\n");
+		printf("Premi 1 per: Vedere le notifche associati ai tuoi voli\n");
+		printf("Premi 2 per: Mandare una segnalazione da associare al volo\n");
 
-	4) Secondo me devo modificare la struttura notifica. Posso aggiungere un booleano che ci consente di determinare se
-	quella notifica deve essere visualizzabile anche agli utenti o solo agli amministratori..............
+		fflush(stdin);
 
-	tipo se bool == true allora è visualizzabile a tutti !
-	se bool == false allora è visualizzabile solo agli utenti !
+		scanf("%d",&scelta);
+
+		switch (scelta)
+		{
+		case 0:
+			printf("Chiusura del menu\n");
+			break;
+
+		case 1:
+
+		if (numero_notifiche != 0)
+		{
+			printf("Stampo tutte le notifche associate ai tuoi voli\n");
+			for (int i = 0; i < utente.numero_biglietti_acquistati; i++)
+			{
+				for (int j = 0; j < numero_notifiche; j++)
+				{
+					if (strcmp(utente.biglietti_utente[i].volo.Id_Volo,lista_notifiche[j].volo_associato.Id_Volo) == 0 && lista_notifiche[j].visualizza == true)
+					{
+					printf("----------------------------------\n");
+					printf("Volo: %s -> %s\n",lista_notifiche[j].volo_associato.partenza_origine , lista_notifiche[j].volo_associato.destinazione);
+					printf("Id del volo: %s\n",lista_notifiche[j].volo_associato.Id_Volo);
+					printf("Stato: %s\n",lista_notifiche[j].volo_associato.messaggio);
+					printf("Numero Notifica: %s\n",lista_notifiche[j].Numero_Notifica);
+					printf("Messaggio: %s\n",lista_notifiche[j].messaggio);
+					printf("----------------------------------\n");
+					}
+					
+				}
+			}
+		}else
+		{
+			printf("Non ci sono notifiche da leggere\n");
+		}
+		
+			
+			
+			break;
+
+		case 2:
+				
+				do
+				{
+					printf("---------------------------------------------------------------------------------------------------\n");
+					printf("Seleziona un biglietto per mandare una notifica al volo associato (inserisci Numero Biglietto)\n");
+
+					Stampa_Biglietti_Utente(utente);
+
+					printf("Inserisci il numero del biglietto\n");
+					printf("---------------------------------------------------------------------------------------------------\n");
+					fflush(stdin);
+
+					scanf("%s",id_biglietto);
+
+					for (int i = 0; i < utente.numero_biglietti_acquistati; i++)
+					{
+						if (strcmp(utente.biglietti_utente[i].numero_biglietto,id_biglietto)== 0)
+						{
+							nuova_notifica.volo_associato = utente.biglietti_utente[i].volo;
+							nuova_notifica.visualizza = false;
+							biglietto_trovato = true;
+						}
+						
+					}
+
+					if (biglietto_trovato == true)
+					{
+						printf("Inserisci la notifica da associare al volo (MAX 348 caratteri)\n");
+						fflush(stdin);
+
+						fgets(nuova_notifica.messaggio,sizeof(nuova_notifica.messaggio),stdin);
+
+						strcat(nuova_notifica.messaggio,"Utente: ");
+						strcat(nuova_notifica.messaggio,utente.nome);
+						strcat(nuova_notifica.messaggio," ");
+						strcat(nuova_notifica.messaggio,utente.cognome);
+						
+						nuova_notifica.messaggio[MAX_NOTIFICA-1] = '\0';
+
+						Genera_Id_Notifica(nuova_notifica.Numero_Notifica);
+						
+						if (strlen(nuova_notifica.messaggio)<MAX_NOTIFICA)
+						{
+							Salva_Notifica(nuova_notifica);
+
+							printf("La notifica è stata inviata\n");
+						}else
+						{
+							biglietto_trovato = false;
+							printf("Messaggio troppo lungo\n");
+						}
+						
+						
+					}
+					
+					
+
+				} while (biglietto_trovato != true);
+				
+			break;
+		
+		default:
+			break;
+		}
+
+	} while (scelta != 0);
+	
+
+}
+
+void Scena_Attivazione_Account_Amministratore(void)
+{
+	int numero_utenti = Conta_Elementi(FILE_NAME_ADMIN);
+	if (numero_utenti != 0)
+	{
+		bool account_trovato = false;
+		char id_attivare [MAX_ID];
+		AMMINISTRATORE amministratori [numero_utenti];
+		int indice = 0;
+		FILE* ptr_file = fopen(FILE_NAME_ADMIN,"rb");
+
+		while (fread(&amministratori[indice],sizeof(AMMINISTRATORE),1,ptr_file) != 0)
+		{
+			indice ++;
+		}
+		
+		indice = 0;
+
+		printf("Stampo tutti gli amministratori attivi\n");
+		printf("------------------------------------------\n");
+
+		for (int i = 0; i < numero_utenti; i++)
+		{
+
+			printf("Nome: %s\n",amministratori[i].nome);
+			printf("Cognome: %s\n",amministratori[i].cognome);
+			printf("Id: %s\n",amministratori[i].Id);
+			printf("Password: %s\n",amministratori[i].password);
+			printf("------------------------------------------\n");
+		}
+
+		do
+		{
+			printf("Inserisci l'id del utente da attivare: ");
+			scanf("%s",id_attivare);
+
+			puts(" ");
+
+			for (int i = 0; i < numero_utenti; i++)
+			{
+				if (strcmp(amministratori[i].Id,id_attivare) == 0)
+				{
+					account_trovato = true;
+					amministratori[i].account_sbloccato = true;
+				}
+				
+			}
+			
+			if (account_trovato == true)
+			{
+				printf("Account attivato\n");
+				Aggiorna_File(&amministratori[0],&amministratori[numero_utenti],FILE_NAME_ADMIN);
+			}else
+			{
+				printf("Non esiste nessun account con quel ID (Riprova)\n");
+			}
+
+		} while (account_trovato != true);
+
+	}else
+	{
+		printf("Non ci sono utenti amministratori\n");
+	}
+
+}
+
+void Scena_Password_Dimenticata(void)
+{
+	int numero_utenti = Conta_Elementi(FILE_NAME_USER);
+	if(numero_utenti != 0)
+	{
+	bool utente_trovato = false;
+	char numero_documento [MAX_DOCUMENTO];
+	FILE* ptr_file = fopen(FILE_NAME_USER,"rb");
+	UTENTE utenti_iscritti[numero_utenti];
+	int indice = 0;
+
+	while (fread(&utenti_iscritti[indice],sizeof(UTENTE),1,ptr_file)!= 0)
+	{
+		indice ++;
+	}
+	
+	indice = 0;
+
+	do{
+	printf("Inserisci il numero del passaporto: ");
+	scanf("%s",numero_documento);
+
+	for (int i = 0; i < numero_utenti; i++)
+	{
+		if (strcmp(utenti_iscritti[i].numero_documeto,numero_documento) == 0)
+		{
+			printf("Utente trovato\n");
+			printf("Password: %s\n",utenti_iscritti[i].password);
+			utente_trovato = true;
+		}
+
+		if (utente_trovato == false)
+		{
+			printf("Il numero del documento inserito non è associato ad alcun utente, riprova\n");
+		}
+		
+		
+	}
+	}while (utente_trovato!= true);
 	
 	
-	*/
 
+	fclose(ptr_file);
+
+	}else
+	{
+		printf("Non ci sono utenti iscritti al programma\n");
+	}
 }

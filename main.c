@@ -10,7 +10,7 @@
  
  NOME: Antonio
  COGNOME: Perrulli
- PASSWORD: Ermitico2!
+ PASSWORD: Ermitico2! / Ermitico#
  POSTO PREFERITO: 100
  CIBO: Vegetariano
  CLASSE: Prima
@@ -19,7 +19,7 @@
  secondo account:
  Nome: Pietro
  Cognome: Menandro
- Password: Rocco.12
+ Password: Rocco.20
 
  */
 
@@ -64,8 +64,6 @@ int main(void)
 				
             default:
 
-                printf("Scelta non valida\n");
-
                 break;
 
             }
@@ -73,5 +71,4 @@ int main(void)
         }
 
     return 0;
-   
 }
