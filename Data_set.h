@@ -457,6 +457,24 @@ void Genera_Numero_Biglietto(char [MAX_NUMERO_BIGLIETTO]);
  */
 void Stampa_Biglietti_Utente(UTENTE);
 
+/** @brief Salva una notifica all interno del file Notifiche_voli.bin
+ * 
+ * Il file Notifiche_Voli.bin, contiene (come dice già il nome), tutte le 
+ * notifiche che sono associati ai voli. Ogni notifica ha um identitificativo
+ * e un volo associato.
+ * 
+ * @param notifica Rappresenta una notifica che si vuole salvare nel file
+ */
+
 void Salva_Notifica(NOTIFICA);
+
+/** @brief Crea l'id di una notifica
+ * 
+ * L'id di una notifica, serve per poterla contrassegnare rispetto le altre.
+ * Questo ci consente di poter selezionare con precisione una notifica da cancellare
+ * 
+ * @param id_notifica Rappresenta l'id della notifica da generare
+ * 
+ */
 
 void Genera_Id_Notifica(char []);
